@@ -44,8 +44,8 @@ function moneyRangeText(r: MoneyRange): string {
 function SummaryRow({ label: rowLabel, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline justify-between gap-2">
-      <span className="text-muted-foreground min-w-0 truncate">{rowLabel}</span>
-      <span className="shrink-0 text-end tabular-nums">{value}</span>
+      <span className="text-muted-foreground shrink-0">{rowLabel}</span>
+      <span className="min-w-0 text-end break-words tabular-nums">{value}</span>
     </div>
   );
 }
@@ -384,12 +384,10 @@ export function WebPage() {
                 ) : null}
 
                 <div className="border-t pt-3">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-medium">{label('web.grandTotal')}</span>
-                    <span className="text-primary shrink-0 text-end text-xl font-bold tabular-nums">
-                      {moneyRangeText(result.grandTotal)}
-                    </span>
-                  </div>
+                  <span className="font-medium">{label('web.grandTotal')}</span>
+                  <p className="text-primary text-xl font-bold break-words tabular-nums">
+                    {moneyRangeText(result.grandTotal)}
+                  </p>
                   <p className="text-muted-foreground pt-1 text-xs">
                     {label('web.grandTotalHint')}
                   </p>
