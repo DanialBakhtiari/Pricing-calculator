@@ -8,7 +8,15 @@ import prettier from 'eslint-config-prettier';
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'dev-dist', 'coverage', 'node_modules', 'src/components/ui'],
+    ignores: [
+      'dist',
+      'dev-dist',
+      'coverage',
+      'node_modules',
+      'src/components/ui',
+      'tests/e2e',
+      'playwright.config.ts',
+    ],
   },
   {
     files: ['**/*.{ts,tsx}'],
