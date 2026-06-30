@@ -67,6 +67,16 @@
 - باندل اولیه ۱۵۰٫۶KB gz (زیر سقف ۱۷۰)؛ WebPage و WaterfallChart lazy chunk.
 - **راستی‌آزمایی مستقل (۱ reviewer):** یک باگ واقعی — افزونه‌ی چندزبانه (§2.7، +۲۰٪ به ساعت پایه) فقط نمایشی بود و روی قیمت اثر نمی‌گذاشت. اصلاح شد: ساعت پایه با `multilangHours` تعدیل و به `buildProposalPrice` داده می‌شود؛ تست افزوده شد (۲ زبان ⇒ ۴۲۰ ساعت ⇒ نهایی ۴۷۲٫۵M).
 
+## 2026-06-30 — Phase 5 (SEO/ROI + Agency)
+
+- **SEO**: `Tabs` برای سه مدل قیمت (Retainer/Performance/Audit) + بخش ROI همیشه‌نمایان. `computeRetainer/computePerformance/computeAudit/computeRoi` همه از موتور (`seoRetainer`، `performancePayment`+`isPerformanceModelSafe`، `visitorValue/monthlyTrafficValue/clientRoi`). برآورد حسابرسی = ساعت میانه‌ی اجزای انتخاب‌شده × نرخ سئو + بازه‌ی مرجع ۱۵–۵۰M. `RoiChart` (lazy) + جمله‌ی مذاکره از روی درصد ROI.
+- **پل‌های فرم تایپ‌شده** `FormMoney/FormNumber/FormPercent/FormSlider` در `components/common/form-fields` — تکرار Controller را در همه‌ی ماژول‌ها حذف کرد.
+- **`toPersianDigits` حالا نقطه‌ی اعشار را به «٫» تبدیل می‌کند** تا اعشار همه‌جا فارسی باشد (ASF ۲٫۲۰، CM ۱٫۸×). round-trip با `parsePersianNumber` حفظ شد. تست رگرسیون افزوده شد.
+- **Agency**: `computeAsf/computeAgencyRate/computeBlended/computeMargin` از موتور. نرخ ترکیبی با `useFieldArray` (افزودن/حذف نقش)؛ فقط ردیف‌های معتبر (نقش غیرخالی، ساعت>۰، نرخ موجود) به `blendedRate` می‌روند. محک حاشیه §4.4: <۱۵٪ قرمز، ۱۵–۲۵٪ زرد، ۲۵٪+ سبز + هشدار `marginTooLow`.
+- **بازاستفاده‌ی `CostDoughnut`** برای BlendedDonut (سهم ساعت×نرخ نقش‌ها) با پالت چرخشی chart-1..5 — به‌جای کامپوننت جدا.
+- **حذف `ModulePlaceholder`** (هر چهار ماژول واقعی شدند). باندل اولیه به **۱۳۶٫۶KB gz** رسید (همه‌ی صفحات lazy chunk).
+- نرخ آژانس فعلاً MAR دستی می‌گیرد (تزریق خودکار activeRate به آژانس به فاز ۶ موکول — تصمیم سادگی).
+
 ### تصمیمات باز (طبق architecture §۱۳ — در فاز مربوطه قطعی می‌شوند)
 - روش PDF: شروع با چاپ مرورگر (`react-to-print`)، ارتقا به `html2canvas+jsPDF` در صورت نیاز (تصمیم نهایی: فاز ۶).
 - Waterfall: پیاده‌سازی دستی روی Bar چارت بدون پلاگین اضافه (حفظ سبکی باندل).

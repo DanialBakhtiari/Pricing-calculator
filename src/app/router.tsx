@@ -5,7 +5,6 @@ import { createHashRouter } from 'react-router-dom';
 import { MODULES } from '@/content/fa';
 import { AppLayout } from './AppLayout';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
-import { ModulePlaceholder } from '@/features/placeholder/ModulePlaceholder';
 
 // صفحات سنگین (فرم+موتور+RHF/zod) lazy می‌شوند تا از باندل اولیه جدا بمانند (architecture §11).
 const PlaygroundPage = lazy(() =>
@@ -14,6 +13,9 @@ const PlaygroundPage = lazy(() =>
 const MarPage = lazy(() => import('@/features/mar/MarPage').then((m) => ({ default: m.MarPage })));
 const WebPage = lazy(() => import('@/features/web/WebPage').then((m) => ({ default: m.WebPage })));
 const SeoPage = lazy(() => import('@/features/seo/SeoPage').then((m) => ({ default: m.SeoPage })));
+const AgencyPage = lazy(() =>
+  import('@/features/agency/AgencyPage').then((m) => ({ default: m.AgencyPage })),
+);
 
 // Hash router: زیر هر مسیر/ساب‌دامین و در حالت embed (iframe) بدون پیکربندی سرور کار می‌کند.
 export const router = createHashRouter([
@@ -33,7 +35,7 @@ export const router = createHashRouter([
           ) : m.id === 'seo' ? (
             <SeoPage />
           ) : (
-            <ModulePlaceholder moduleId={m.id} />
+            <AgencyPage />
           ),
       })),
     ],

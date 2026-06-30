@@ -11,7 +11,7 @@
 | ۲ | کمکی‌ها و پایه‌های UI | ✅ | ۸۸ تست، format/content/store/۸ کامپوننت/router/داشبورد، راستی‌آزمایی ۲-عاملی |
 | ۳ | ماژول MAR | ✅ | فرم+نتیجه+CostDoughnut+سناریو+tour، ۹۸ تست، نرخ فعال تزریق، باندل ۱۴۹KB gz |
 | ۴ | ماژول وب/وردپرس | ✅ | Cheat Sheet+CM/RB/Builder+افزودنی+Waterfall+۳سطح، ۱۰۶ تست، Vector 337.5M |
-| ۵ | ماژول سئو/ROI + آژانس | ⬜ | — |
+| ۵ | ماژول سئو/ROI + آژانس | ✅ | SEO(۴مدل+ROI+RoiChart)+آژانس(ASF/blended/margin+donut)، ۱۲۱ تست، Vectorها |
 | ۶ | قابلیت‌های فرابخشی (PDF/سناریو/embed) | ⬜ | — |
 | ۷ | PWA، عملکرد، A11y، e2e، انتشار | ⬜ | — |
 
@@ -75,3 +75,16 @@
 **راستی‌آزمایی مستقل (۱ reviewer):** ۱ باگ واقعی یافت و رفع شد — چندزبانه روی قیمت اعمال نمی‌شد (فقط نمایشی). حالا ساعت پایه را تعدیل می‌کند. (نکته‌ی ASF در waterfall: web همیشه ASF=1، پس مرحله‌اش صفر و حذف‌شده — درست.)
 
 **ریسک باقی‌مانده:** سه‌سطحی‌سازی (afterCM/final/final+extras) یک تفسیر قابل‌دفاع از §2.9 است (سند فرمول دقیق سه قیمت را نمی‌دهد). در فاز ۶ (پروپوزال) بازبینی شود.
+
+### فاز ۵ — ماژول سئو/ROI + آژانس (✅ تمام — 2026-06-30)
+معیار پذیرش: Test Vectorهای ۳ و ۴ در UI درست؛ هشدارها (Performance ناایمن، Margin<۱۵٪)؛ tooltip/tour کامل.
+
+**SEO:** `features/seo/{seoForm,SeoPage}` — Tabs سه مدل (Retainer/Performance/Audit) + ROI همیشه‌نمایان. همه از موتور (`computeRetainer/Performance/Audit/Roi`). `RoiChart` (lazy) + جمله‌ی مذاکره از درصد ROI. هشدار ایمنی دو شرطی §3.2.
+**Agency:** `features/agency/{agencyForm,AgencyPage}` — ASF، نرخ آژانس، نرخ ترکیبی با `useFieldArray` (افزودن/حذف نقش) + دونات سهم نقش‌ها (بازاستفاده‌ی CostDoughnut)، حاشیه با محک §4.4 + هشدار <۱۵٪.
+**مشترک:** پل‌های فرم `FormMoney/Number/Percent/Slider`؛ `toPersianDigits` اعشار را به «٫» تبدیل می‌کند؛ `ModulePlaceholder` حذف شد.
+
+**تست‌های سبز:** ۱۲۱ تست؛ Vectorها — Retainer ۱۰M، ROI ۱۴۰٪، Performance ۱۴M+safe، Audit؛ ASF ۲٫۲، Blended ۷۰۰k، Margin ۳۰٪. پوشش lib ۱۰۰٪. `typecheck/lint/format/build` سبز. باندل اولیه ۱۳۶٫۶KB gz.
+
+**راستی‌آزمایی مستقل (۱ reviewer):** ۵ یافته؛ ۱ واقعی (نبود tooltip فیلد MAR آژانس) اعمال شد + tooltipهای roles/margin افزوده شد. ۴ رد شد (cm در computeAgencyRate guard دارد؛ roleShares و dataDoughnut هردو guard دارند؛ بازاستفاده‌ی tooltip CM عمومی قابل‌قبول است).
+
+**ریسک باقی‌مانده:** تزریق خودکار activeRate به نرخ آژانس به فاز ۶ موکول. تورهای driver.js نیاز به data-tour روی همه‌ی عناصر هدف دارند (فاز ۶/۷ صیقل).

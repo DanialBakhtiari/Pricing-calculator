@@ -10,6 +10,10 @@ describe('format — toPersianDigits', () => {
   it('leaves non-digit characters untouched', () => {
     expect(toPersianDigits('A1٪')).toBe('A۱٪');
   });
+
+  it('converts the decimal point to the Persian separator', () => {
+    expect(toPersianDigits('2.20')).toBe('۲٫۲۰');
+  });
 });
 
 describe('format — parsePersianNumber', () => {

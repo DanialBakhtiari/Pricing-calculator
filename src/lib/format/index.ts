@@ -3,10 +3,12 @@
 const PERSIAN_DIGITS = '۰۱۲۳۴۵۶۷۸۹';
 const ARABIC_DIGITS = '٠١٢٣٤٥٦٧٨٩';
 
-/** ارقام لاتین (۰–۹) را به ارقام فارسی تبدیل می‌کند. */
+/** ارقام لاتین (۰–۹) را به فارسی و نقطه‌ی اعشار را به «٫» تبدیل می‌کند. */
 export function toPersianDigits(input: string | number): string {
   // charAt همیشه string برمی‌گرداند (برای رقم معتبر، رقم فارسی متناظر) — بدون شاخه‌ی اضافی.
-  return String(input).replace(/[0-9]/g, (d) => PERSIAN_DIGITS.charAt(Number(d)));
+  return String(input)
+    .replace(/[0-9]/g, (d) => PERSIAN_DIGITS.charAt(Number(d)))
+    .replace(/\./g, '٫');
 }
 
 /** ارقام فارسی و عربی را به لاتین برمی‌گرداند (برای parse داخلی). */

@@ -21,7 +21,8 @@ export interface CostDoughnutProps {
 /** نمودار دونات سهم هزینه‌ها (مستقیم/سربار/سود) — ماژول ۱. */
 export default function CostDoughnut({ segments, ariaLabel }: CostDoughnutProps) {
   const ref = useRef<Chart<'doughnut'>>(null);
-  const colors = [cssVar('--chart-1'), cssVar('--chart-3'), cssVar('--chart-4')];
+  // پالت چرخشی chart-1..5 — برای ۳ بخش هزینه و N نقش (BlendedDonut) قابل‌استفاده.
+  const colors = segments.map((_, i) => cssVar(`--chart-${(i % 5) + 1}`));
 
   const data = {
     labels: segments.map((s) => s.label),
