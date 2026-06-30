@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef, useState } from 'react';
+import { lazy, Suspense, useRef } from 'react';
 import { Controller, useForm, useWatch, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useReactToPrint } from 'react-to-print';
@@ -28,15 +28,11 @@ import {
   computeRoi,
   seoSchema,
   type SeoFormValues,
-  type SeoMode,
 } from './seoForm';
 
-const TAB_IDS: SeoMode[] = ['retainer', 'performance', 'audit'];
-
-// تریگرِ تب: همه‌ی بک‌گراندهای active پیش‌فرض shadcn (روشن/تیره/حاشیه) خنثی می‌شوند
-// تا فقط «پیلِ برندِ لغزان» وضعیت فعال را نشان دهد.
+// تب فعال = پس‌زمینه‌ی برند (روشن/تیره) با گذارِ نرم رنگ — ساده و تضمینی روی موبایل.
 const TAB_TRIGGER_CLASS =
-  'relative z-10 min-h-11 text-foreground/70 transition-colors data-[state=active]:bg-transparent data-[state=active]:text-primary-foreground data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent dark:data-[state=active]:text-primary-foreground';
+  'min-h-11 rounded-md text-sm font-medium transition-colors data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-primary dark:data-[state=active]:text-primary-foreground';
 
 const RoiChart = lazy(() => import('@/components/charts/RoiChart'));
 
@@ -67,9 +63,6 @@ export function SeoPage() {
   const audit = computeAudit(values);
   const roi = computeRoi(values);
   const dash = '—';
-
-  const [tab, setTab] = useState<SeoMode>('retainer');
-  const activeIndex = TAB_IDS.indexOf(tab);
 
   const proposalRef = useRef<HTMLDivElement>(null);
   const printProposal = useReactToPrint({ contentRef: proposalRef });
@@ -128,18 +121,8 @@ export function SeoPage() {
         onExportPdf={hasProposal ? () => printProposal() : undefined}
       />
 
-      <Tabs value={tab} onValueChange={(v) => setTab(v as SeoMode)} data-tour="seo-model">
-        <TabsList className="relative grid h-auto w-full grid-cols-3 p-1">
-          {/* پیلِ برندِ لغزان (RTL) — نشانگر تب فعال */}
-          <span
-            aria-hidden
-            className="bg-primary absolute inset-y-1 rounded-md shadow-sm transition-transform duration-200 ease-out"
-            style={{
-              width: 'calc((100% - 0.5rem) / 3)',
-              insetInlineStart: '0.25rem',
-              transform: `translateX(calc(${activeIndex} * -100%))`,
-            }}
-          />
+      <Tabs defaultValue="retainer" data-tour="seo-model">
+        <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1">
           <TabsTrigger value="retainer" className={TAB_TRIGGER_CLASS}>
             {label('seo.tabRetainer')}
           </TabsTrigger>

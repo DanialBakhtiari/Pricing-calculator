@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { parsePersianNumber, toPersianDigits } from '@/lib/format';
@@ -79,6 +80,8 @@ export function NumberField({
     <div className="space-y-1.5" data-tour={rest['data-tour']}>
       <div className="flex items-center gap-1.5">
         <Label htmlFor={id}>{label}</Label>
+        {/* واحد کنار لیبل می‌آید (نه داخل اینپوت) تا هرگز روی عدد نیفتد. */}
+        {unit ? <span className="text-muted-foreground text-xs">({unit})</span> : null}
         {tooltip ? (
           <InfoTooltip content={tooltip} label={`${labels['a11y.explain']} ${label}`} />
         ) : null}
@@ -96,38 +99,25 @@ export function NumberField({
           <Minus aria-hidden />
         </Button>
 
-        {/* واحد (مثل «تومان») جزءِ flex است نه absolute، تا هرگز روی عدد نیفتد. */}
-        <div
+        <Input
+          id={id}
+          inputMode="decimal"
+          dir="ltr"
           className={cn(
-            'border-input dark:bg-input/30 focus-within:border-ring focus-within:ring-ring/50 flex h-11 flex-1 items-center rounded-md border bg-transparent shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]',
-            error && 'border-destructive focus-within:ring-destructive/30',
+            'h-11 flex-1 text-center text-sm tabular-nums',
+            error && 'border-destructive',
           )}
-        >
-          <input
-            id={id}
-            inputMode="decimal"
-            dir="ltr"
-            className={cn(
-              'h-full min-w-0 flex-1 bg-transparent px-3 text-sm tabular-nums outline-none',
-              unit ? 'text-end' : 'text-center',
-            )}
-            value={display}
-            placeholder={placeholder}
-            aria-invalid={error ? true : undefined}
-            aria-describedby={error ? errorId : undefined}
-            onFocus={() => {
-              setEditing(true);
-              setDraft(value === null ? '' : editDisplay(value));
-            }}
-            onChange={(e) => handleChange(e.target.value)}
-            onBlur={() => setEditing(false)}
-          />
-          {unit ? (
-            <span className="text-muted-foreground pointer-events-none shrink-0 ps-1 pe-3 text-xs">
-              {unit}
-            </span>
-          ) : null}
-        </div>
+          value={display}
+          placeholder={placeholder}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
+          onFocus={() => {
+            setEditing(true);
+            setDraft(value === null ? '' : editDisplay(value));
+          }}
+          onChange={(e) => handleChange(e.target.value)}
+          onBlur={() => setEditing(false)}
+        />
 
         <Button
           type="button"
