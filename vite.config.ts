@@ -20,9 +20,21 @@ export default defineConfig({
     include: ['tests/**/*.{test,spec}.{ts,tsx}', 'src/**/*.{test,spec}.{ts,tsx}'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html'],
+      reporter: ['text', 'text-summary', 'html'],
       include: ['src/lib/**'],
-      // پوشش ۱۰۰٪ موتور قیمت‌گذاری در فاز ۱ فعال می‌شود (هنوز کدی وجود ندارد).
+      thresholds: {
+        // architecture §10/§11: lib کلی ≥ ۹۰٪، موتور قیمت‌گذاری = ۱۰۰٪ خطوط.
+        lines: 90,
+        functions: 90,
+        branches: 90,
+        statements: 90,
+        'src/lib/pricing/**': {
+          lines: 100,
+          functions: 100,
+          branches: 100,
+          statements: 100,
+        },
+      },
     },
   },
 });
