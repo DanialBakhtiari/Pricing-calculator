@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useAppStore } from '@/lib/storage/appStore';
-import { label } from '@/content/fa';
+import { BRAND, label } from '@/content/fa';
 import { useApplyTheme } from './use-apply-theme';
 import { isEmbed, usePostHeight } from './embed';
 
@@ -65,6 +65,35 @@ export function AppLayout() {
             <Outlet />
           </Suspense>
         </main>
+
+        {embed ? null : (
+          <footer className="mt-8 border-t">
+            <div className="text-muted-foreground mx-auto flex max-w-5xl flex-col items-center gap-2 px-4 py-6 text-center text-sm sm:flex-row sm:justify-between sm:text-start">
+              <p className="font-medium">{label('footer.madeBy')}</p>
+              <div className="flex items-center gap-4">
+                <a
+                  href={BRAND.site}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground underline-offset-4 hover:underline"
+                >
+                  {label('footer.site')}
+                </a>
+                <a
+                  href={BRAND.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground underline-offset-4 hover:underline"
+                >
+                  {label('footer.github')}
+                </a>
+              </div>
+            </div>
+            <p className="text-muted-foreground/70 px-4 pb-4 text-center text-xs">
+              {label('footer.rights')}
+            </p>
+          </footer>
+        )}
 
         <Toaster />
       </div>

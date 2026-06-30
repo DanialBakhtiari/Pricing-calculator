@@ -9,18 +9,12 @@ import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   InfoTooltip,
   ModuleHeader,
   MoneyField,
   NumberField,
   ProposalSheet,
+  ResponsiveSelect,
   ScenarioBar,
   SliderField,
   SummaryRow,
@@ -109,6 +103,7 @@ export function WebPage() {
       <ModuleHeader
         title={META?.name ?? ''}
         description={META?.description}
+        guide="web"
         onHelp={() => void startModuleTour('web')}
         onExportPdf={result ? () => printProposal() : undefined}
       />
@@ -130,8 +125,11 @@ export function WebPage() {
                   name="featureId"
                   control={control}
                   render={({ field }) => (
-                    <Select
+                    <ResponsiveSelect
                       value={field.value ?? ''}
+                      ariaLabel={label('web.feature')}
+                      placeholder={label('web.featurePlaceholder')}
+                      options={FEATURE_CHEAT_SHEET.map((f) => ({ value: f.id, label: f.label }))}
                       onValueChange={(id) => {
                         field.onChange(id);
                         const f = FEATURE_CHEAT_SHEET.find((x) => x.id === id);
@@ -140,18 +138,7 @@ export function WebPage() {
                           setValue('cm', (f.cmMin + f.cmMax) / 2);
                         }
                       }}
-                    >
-                      <SelectTrigger className="h-11 w-full" aria-label={label('web.feature')}>
-                        <SelectValue placeholder={label('web.featurePlaceholder')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {FEATURE_CHEAT_SHEET.map((f) => (
-                          <SelectItem key={f.id} value={f.id}>
-                            {f.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    />
                   )}
                 />
               </div>
@@ -188,15 +175,15 @@ export function WebPage() {
                   name="rateSource"
                   control={control}
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="h-11 w-full" aria-label={label('web.rateSource')}>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="market">{label('web.rateMarket')}</SelectItem>
-                        <SelectItem value="mar">{label('web.rateMar')}</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <ResponsiveSelect
+                      value={field.value}
+                      ariaLabel={label('web.rateSource')}
+                      onValueChange={field.onChange}
+                      options={[
+                        { value: 'market', label: label('web.rateMarket') },
+                        { value: 'mar', label: label('web.rateMar') },
+                      ]}
+                    />
                   )}
                 />
               </div>
@@ -288,18 +275,12 @@ export function WebPage() {
                   name="builderId"
                   control={control}
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="h-11 w-full" aria-label={label('web.builder')}>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {BUILDER_MULTIPLIER.map((b) => (
-                          <SelectItem key={b.id} value={b.id}>
-                            {b.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <ResponsiveSelect
+                      value={field.value}
+                      ariaLabel={label('web.builder')}
+                      onValueChange={field.onChange}
+                      options={BUILDER_MULTIPLIER.map((b) => ({ value: b.id, label: b.label }))}
+                    />
                   )}
                 />
               </div>
@@ -369,7 +350,7 @@ export function WebPage() {
                     <span>{label('web.finalPrice')}</span>
                     <InfoTooltip content={tooltip('web.waterfall')} />
                   </div>
-                  <p className="text-success text-3xl font-bold break-words tabular-nums">
+                  <p className="text-success text-2xl font-bold break-words tabular-nums sm:text-3xl">
                     {formatToman(result.proposal.final)}
                   </p>
                   <p className="text-muted-foreground text-xs">{label('web.finalHint')}</p>

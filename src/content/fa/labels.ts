@@ -16,6 +16,14 @@ export const labels = {
   'nav.dashboard': 'داشبورد',
   'nav.back': 'بازگشت به داشبورد',
 
+  'footer.madeBy': 'طراحی و توسعه: دانیال بختیاری',
+  'footer.site': 'وب‌سایت',
+  'footer.github': 'گیت‌هاب',
+  'footer.rights': 'ابزار رایگان و کلاینت‌ساید — داده‌ای به سروری ارسال نمی‌شود.',
+
+  'guide.open': 'آموزش استفاده',
+  'guide.close': 'متوجه شدم',
+
   'table.item': 'مورد',
   'table.value': 'مقدار',
 
@@ -115,6 +123,9 @@ export const labels = {
   'seo.modeRetainer': 'Retainer ماهانه',
   'seo.modePerformance': 'عملکردمحور (Hybrid)',
   'seo.modeAudit': 'حسابرسی',
+  'seo.tabRetainer': 'ماهانه',
+  'seo.tabPerformance': 'عملکردی',
+  'seo.tabAudit': 'حسابرسی',
   'seo.contentHours': 'ساعت تولید محتوا در ماه',
   'seo.writerRate': 'نرخ ساعتی نویسنده',
   'seo.technicalHours': 'ساعت بهینه‌سازی فنی در ماه',

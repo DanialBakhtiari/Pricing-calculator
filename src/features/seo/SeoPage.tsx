@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef } from 'react';
+import { lazy, Suspense, useRef, useState } from 'react';
 import { Controller, useForm, useWatch, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useReactToPrint } from 'react-to-print';
@@ -28,7 +28,10 @@ import {
   computeRoi,
   seoSchema,
   type SeoFormValues,
+  type SeoMode,
 } from './seoForm';
+
+const TAB_IDS: SeoMode[] = ['retainer', 'performance', 'audit'];
 
 const RoiChart = lazy(() => import('@/components/charts/RoiChart'));
 
@@ -39,7 +42,9 @@ function SummaryHero({ title, value }: { title: string; value: string }) {
   return (
     <CardHeader>
       <CardTitle className="text-muted-foreground text-sm font-normal">{title}</CardTitle>
-      <p className="text-success text-3xl font-bold break-words tabular-nums">{value}</p>
+      <p className="text-success text-2xl font-bold break-words tabular-nums sm:text-3xl">
+        {value}
+      </p>
     </CardHeader>
   );
 }
@@ -57,6 +62,9 @@ export function SeoPage() {
   const audit = computeAudit(values);
   const roi = computeRoi(values);
   const dash = '—';
+
+  const [tab, setTab] = useState<SeoMode>('retainer');
+  const activeIndex = TAB_IDS.indexOf(tab);
 
   const proposalRef = useRef<HTMLDivElement>(null);
   const printProposal = useReactToPrint({ contentRef: proposalRef });
@@ -110,20 +118,40 @@ export function SeoPage() {
       <ModuleHeader
         title={META?.name ?? ''}
         description={META?.description}
+        guide="seo"
         onHelp={() => void startModuleTour('seo')}
         onExportPdf={hasProposal ? () => printProposal() : undefined}
       />
 
-      <Tabs defaultValue="retainer" data-tour="seo-model">
-        <TabsList className="h-auto w-full flex-wrap">
-          <TabsTrigger value="retainer" className="min-h-11 flex-1 py-2 whitespace-normal">
-            {label('seo.modeRetainer')}
+      <Tabs value={tab} onValueChange={(v) => setTab(v as SeoMode)} data-tour="seo-model">
+        <TabsList className="relative grid h-auto w-full grid-cols-3 p-1">
+          {/* نشانگر فعالِ لغزان (RTL) */}
+          <span
+            aria-hidden
+            className="bg-background absolute inset-y-1 rounded-md shadow-sm transition-transform duration-200 ease-out"
+            style={{
+              width: 'calc((100% - 0.5rem) / 3)',
+              insetInlineStart: '0.25rem',
+              transform: `translateX(calc(${activeIndex} * -100%))`,
+            }}
+          />
+          <TabsTrigger
+            value="retainer"
+            className="relative z-10 min-h-11 bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+          >
+            {label('seo.tabRetainer')}
           </TabsTrigger>
-          <TabsTrigger value="performance" className="min-h-11 flex-1 py-2 whitespace-normal">
-            {label('seo.modePerformance')}
+          <TabsTrigger
+            value="performance"
+            className="relative z-10 min-h-11 bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+          >
+            {label('seo.tabPerformance')}
           </TabsTrigger>
-          <TabsTrigger value="audit" className="min-h-11 flex-1 py-2 whitespace-normal">
-            {label('seo.modeAudit')}
+          <TabsTrigger
+            value="audit"
+            className="relative z-10 min-h-11 bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+          >
+            {label('seo.tabAudit')}
           </TabsTrigger>
         </TabsList>
 

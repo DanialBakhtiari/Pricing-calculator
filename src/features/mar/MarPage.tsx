@@ -89,6 +89,7 @@ export function MarPage() {
       <ModuleHeader
         title={META?.name ?? ''}
         description={META?.description}
+        guide="mar"
         onHelp={() => void startModuleTour('mar')}
         onExportPdf={result ? () => printProposal() : undefined}
       />
@@ -177,7 +178,7 @@ export function MarPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-1">
-                  <p className="text-success text-3xl font-bold break-words tabular-nums">
+                  <p className="text-success text-2xl font-bold break-words tabular-nums sm:text-3xl">
                     {formatToman(result.mar)}
                   </p>
                   <p className="text-muted-foreground text-xs">{label('mar.resultHint')}</p>

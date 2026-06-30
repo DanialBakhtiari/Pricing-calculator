@@ -1,5 +1,5 @@
 import { type Ref } from 'react';
-import { label } from '@/content/fa';
+import { BRAND, label } from '@/content/fa';
 
 export interface ProposalRow {
   label: string;
@@ -108,7 +108,10 @@ export function ProposalSheet({ ref, moduleTitle, hero, sections, tiers }: Propo
       ) : null}
 
       <footer className="mt-10 border-t border-neutral-200 pt-3 text-center text-xs text-neutral-400">
-        {label('proposal.generatedBy')}
+        <p>{label('proposal.generatedBy')}</p>
+        <p className="mt-1">
+          {BRAND.author} — {BRAND.site}
+        </p>
       </footer>
     </div>
   );

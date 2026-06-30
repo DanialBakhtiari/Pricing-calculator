@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Download, FileDown, HelpCircle, Save } from 'lucide-react';
+import { ArrowRight, Download, FileDown, GraduationCap, HelpCircle, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { label } from '@/content/fa';
+import { label, type GuideKey } from '@/content/fa';
+import { GuideDialog } from './GuideDialog';
 
 export interface ModuleHeaderProps {
   title: string;
   description?: string;
+  /** کلید مدال آموزش این ماژول. */
+  guide?: GuideKey;
   onHelp?: () => void;
   onSave?: () => void;
   onExportPdf?: () => void;
@@ -16,6 +19,7 @@ export interface ModuleHeaderProps {
 export function ModuleHeader({
   title,
   description,
+  guide,
   onHelp,
   onSave,
   onExportPdf,
@@ -36,6 +40,17 @@ export function ModuleHeader({
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
+        {guide ? (
+          <GuideDialog
+            guide={guide}
+            trigger={
+              <Button type="button" variant="outline" size="sm" className="h-11">
+                <GraduationCap aria-hidden />
+                {label('guide.open')}
+              </Button>
+            }
+          />
+        ) : null}
         {onHelp ? (
           <Button type="button" variant="outline" size="sm" className="h-11" onClick={onHelp}>
             <HelpCircle aria-hidden />

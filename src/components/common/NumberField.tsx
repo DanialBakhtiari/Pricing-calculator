@@ -59,9 +59,16 @@ export function NumberField({
       ? ''
       : (formatDisplay?.(value) ?? toPersianDigits(value));
 
-  const commit = (raw: string) => {
+  const editDisplay = (v: number) => (formatDisplay ? formatDisplay(v) : toPersianDigits(v));
+
+  // هنگام تایپ: گروه‌بندی هزارگانِ زنده برای فیلدهای پولی؛ ولی اگر کاربر در حال
+  // تایپ اعشار باشد، خام نگه می‌داریم تا نقطه‌ی اعشار خورده نشود.
+  const handleChange = (raw: string) => {
     const parsed = parsePersianNumber(raw);
-    onChange(raw.trim() === '' || Number.isNaN(parsed) ? null : parsed);
+    const isNum = raw.trim() !== '' && !Number.isNaN(parsed);
+    const typingDecimal = /[.٫]/.test(raw);
+    setDraft(formatDisplay && isNum && !typingDecimal ? formatDisplay(parsed) : raw);
+    onChange(isNum ? parsed : null);
   };
 
   const step10 = (dir: 1 | -1) => {
@@ -102,12 +109,9 @@ export function NumberField({
             aria-describedby={error ? errorId : undefined}
             onFocus={() => {
               setEditing(true);
-              setDraft(value === null ? '' : toPersianDigits(value));
+              setDraft(value === null ? '' : editDisplay(value));
             }}
-            onChange={(e) => {
-              setDraft(e.target.value);
-              commit(e.target.value);
-            }}
+            onChange={(e) => handleChange(e.target.value)}
             onBlur={() => setEditing(false)}
           />
           {unit ? (

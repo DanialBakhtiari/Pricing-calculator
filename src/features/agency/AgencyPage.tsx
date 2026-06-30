@@ -93,6 +93,7 @@ export function AgencyPage() {
       <ModuleHeader
         title={META?.name ?? ''}
         description={META?.description}
+        guide="agency"
         onHelp={() => void startModuleTour('agency')}
         onExportPdf={hasProposal ? () => printProposal() : undefined}
       />
@@ -252,7 +253,7 @@ export function AgencyPage() {
                 {label('agency.blended')}
                 <InfoTooltip content={tooltip('agency.blended')} />
               </CardTitle>
-              <p className="text-success text-3xl font-bold break-words tabular-nums">
+              <p className="text-success text-2xl font-bold break-words tabular-nums sm:text-3xl">
                 {blended !== null ? formatToman(blended) : '—'}
               </p>
             </CardHeader>

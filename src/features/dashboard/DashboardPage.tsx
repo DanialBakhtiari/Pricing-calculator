@@ -6,11 +6,13 @@ import {
   Calculator,
   FlaskConical,
   Globe,
-  HelpCircle,
+  GraduationCap,
+  PlayCircle,
   TrendingUp,
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { GuideDialog } from '@/components/common/GuideDialog';
 import { useAppStore } from '@/lib/storage/appStore';
 import { startModuleTour } from '@/lib/onboarding/runTour';
 import { MODULES, label, type ModuleId } from '@/content/fa';
@@ -42,16 +44,27 @@ export function DashboardPage() {
           <h1 className="text-2xl font-bold md:text-3xl">{label('app.title')}</h1>
           <p className="text-muted-foreground">{label('app.tagline')}</p>
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="h-11"
-          onClick={() => void startModuleTour('welcome')}
-        >
-          <HelpCircle aria-hidden />
-          {label('action.help')}
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <GuideDialog
+            guide="welcome"
+            trigger={
+              <Button type="button" className="h-11">
+                <GraduationCap aria-hidden />
+                {label('guide.open')}
+              </Button>
+            }
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-11"
+            onClick={() => void startModuleTour('welcome')}
+          >
+            <PlayCircle aria-hidden />
+            {label('action.help')}
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

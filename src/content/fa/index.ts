@@ -12,6 +12,9 @@ export { tours } from './tours';
 export type { TourKey, TourStep } from './tours';
 export { WEB_TIERS } from './web';
 export type { WebTierContentId } from './web';
+export { BRAND } from './brand';
+export { guides } from './guides';
+export type { GuideKey, Guide } from './guides';
 
 /** متن tooltip یک فیلد. */
 export const tooltip = (key: TooltipKey): string => tooltips[key];
