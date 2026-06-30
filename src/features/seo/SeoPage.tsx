@@ -122,7 +122,7 @@ export function SeoPage() {
       />
 
       <Tabs defaultValue="retainer" data-tour="seo-model">
-        <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1">
+        <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1 group-data-[orientation=horizontal]/tabs:h-auto">
           <TabsTrigger value="retainer" className={TAB_TRIGGER_CLASS}>
             {label('seo.tabRetainer')}
           </TabsTrigger>
