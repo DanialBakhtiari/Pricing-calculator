@@ -139,6 +139,13 @@ export const labels = {
     'این سرمایه‌گذاری حدود {roi} بازگشت در همان ماه اول دارد؛ گفتگو را از «هزینه» به «سرمایه‌گذاری» ببرید.',
   'seo.roiChartValue': 'ارزش ماهانه',
   'seo.roiChartRetainer': 'هزینه‌ی ماهانه',
+  'seo.annual': 'معادل سالانه (×۱۲)',
+  'seo.bonusTotal': 'مجموع پاداش‌ها',
+  'seo.auditComponents': 'اجزای انتخاب‌شده',
+  'seo.summaryRetainer': 'خلاصه‌ی Retainer',
+  'seo.summaryPerformance': 'خلاصه‌ی عملکردمحور',
+  'seo.summaryAudit': 'خلاصه‌ی حسابرسی',
+  'seo.roiMonthlyNet': 'سود خالص ماهانه',
 
   'agency.laborGroup': 'نیروی کار',
   'agency.directLabor': 'نیروی مستقیم (سالانه)',

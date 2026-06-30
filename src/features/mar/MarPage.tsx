@@ -1,18 +1,18 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { Controller, useForm, useWatch, type Resolver } from 'react-hook-form';
+import { useForm, useWatch, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   BENCHMARK_STATUS_LABELS,
   BenchmarkBar,
+  FormMoney,
+  FormNumber,
+  FormSlider,
   InfoTooltip,
   ModuleHeader,
-  MoneyField,
-  NumberField,
-  ResultCard,
   ScenarioBar,
-  SliderField,
+  SummaryRow,
 } from '@/components/common';
 import { RANGES } from '@/lib/pricing';
 import { formatPercent, formatToman, toPersianDigits } from '@/lib/format';
@@ -43,7 +43,6 @@ export function MarPage() {
   const result = computeMarResult(values);
   const mar = result?.mar ?? null;
 
-  // نرخ فعال مشترک = MAR (تزریق به ماژول ۲/۴).
   useEffect(() => {
     if (mar !== null) setActiveRate(mar);
   }, [mar, setActiveRate]);
@@ -56,52 +55,31 @@ export function MarPage() {
         onHelp={() => void startModuleTour('mar')}
       />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* فرم ورودی */}
-        <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+      <div className="grid gap-6 lg:grid-cols-5">
+        {/* ───── فرم (۳/۵) ───── */}
+        <form className="space-y-6 lg:col-span-3" onSubmit={(e) => e.preventDefault()}>
           <Card data-tour="mar-costs">
             <CardHeader>
               <CardTitle>{label('mar.costsGroup')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
-              <Controller
+              <FormMoney
+                control={control}
                 name="direct"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <MoneyField
-                    label={label('mar.direct')}
-                    tooltip={tooltip('mar.direct')}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={fieldState.error?.message}
-                  />
-                )}
+                label={label('mar.direct')}
+                tooltip={tooltip('mar.direct')}
               />
-              <Controller
+              <FormMoney
+                control={control}
                 name="overhead"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <MoneyField
-                    label={label('mar.overhead')}
-                    tooltip={tooltip('mar.overhead')}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={fieldState.error?.message}
-                  />
-                )}
+                label={label('mar.overhead')}
+                tooltip={tooltip('mar.overhead')}
               />
-              <Controller
-                name="profitTarget"
+              <FormMoney
                 control={control}
-                render={({ field, fieldState }) => (
-                  <MoneyField
-                    label={label('mar.profit')}
-                    tooltip={tooltip('mar.profit')}
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={fieldState.error?.message}
-                  />
-                )}
+                name="profitTarget"
+                label={label('mar.profit')}
+                tooltip={tooltip('mar.profit')}
               />
             </CardContent>
           </Card>
@@ -111,91 +89,74 @@ export function MarPage() {
               <CardTitle>{label('mar.capacityGroup')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
-              <Controller
+              <FormNumber
+                control={control}
                 name="weeks"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <NumberField
-                    label={label('mar.weeks')}
-                    tooltip={tooltip('mar.weeks')}
-                    unit={label('unit.week')}
-                    value={field.value}
-                    onChange={field.onChange}
-                    min={RANGES.weeks.min}
-                    max={RANGES.weeks.max}
-                    error={fieldState.error?.message}
-                  />
-                )}
+                label={label('mar.weeks')}
+                tooltip={tooltip('mar.weeks')}
+                unit={label('unit.week')}
+                min={RANGES.weeks.min}
+                max={RANGES.weeks.max}
               />
-              <Controller
+              <FormNumber
+                control={control}
                 name="hoursPerWeek"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <NumberField
-                    label={label('mar.hoursPerWeek')}
-                    tooltip={tooltip('mar.hoursPerWeek')}
-                    unit={label('unit.hours')}
-                    value={field.value}
-                    onChange={field.onChange}
-                    min={RANGES.hoursPerWeek.min}
-                    max={RANGES.hoursPerWeek.max}
-                    error={fieldState.error?.message}
-                  />
-                )}
+                label={label('mar.hoursPerWeek')}
+                tooltip={tooltip('mar.hoursPerWeek')}
+                unit={label('unit.hours')}
+                min={RANGES.hoursPerWeek.min}
+                max={RANGES.hoursPerWeek.max}
               />
-              <Controller
-                name="utilization"
-                control={control}
-                render={({ field }) => (
-                  <SliderField
-                    data-tour="mar-utilization"
-                    label={label('mar.utilization')}
-                    tooltip={tooltip('mar.utilization')}
-                    value={field.value ?? RANGES.utilization.default}
-                    onChange={field.onChange}
-                    min={RANGES.utilization.min}
-                    max={RANGES.utilization.max}
-                    step={0.01}
-                    formatValue={(v) => toPersianDigits(v.toFixed(2))}
-                  />
-                )}
-              />
+              <div data-tour="mar-utilization">
+                <FormSlider
+                  control={control}
+                  name="utilization"
+                  label={label('mar.utilization')}
+                  tooltip={tooltip('mar.utilization')}
+                  min={RANGES.utilization.min}
+                  max={RANGES.utilization.max}
+                  step={0.01}
+                  fallback={RANGES.utilization.default}
+                  formatValue={(v) => toPersianDigits(v.toFixed(2))}
+                />
+              </div>
             </CardContent>
           </Card>
         </form>
 
-        {/* نتایج */}
-        <div className="space-y-4 lg:sticky lg:top-20 lg:self-start">
+        {/* ───── خلاصه‌ی زنده (۲/۵) ───── */}
+        <div className="lg:col-span-2">
           {result ? (
-            <>
-              <ResultCard
-                data-tour="mar-result"
-                label={label('mar.result')}
-                value={formatToman(result.mar)}
-                tooltip={tooltip('mar.result')}
-                hint={label('mar.resultHint')}
-                status="healthy"
-              />
+            <Card className="lg:sticky lg:top-20" data-tour="mar-result">
+              <CardHeader>
+                <CardTitle className="text-muted-foreground flex items-center gap-1.5 text-sm font-normal">
+                  {label('mar.result')}
+                  <InfoTooltip content={tooltip('mar.result')} />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-1">
+                  <p className="text-success text-3xl font-bold break-words tabular-nums">
+                    {formatToman(result.mar)}
+                  </p>
+                  <p className="text-muted-foreground text-xs">{label('mar.resultHint')}</p>
+                </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <ResultCard
-                  label={label('mar.billable')}
-                  value={`${toPersianDigits(Math.round(result.billable))} ${label('unit.hoursPerYear')}`}
-                />
-                <ResultCard label={label('mar.total')} value={formatToman(result.total)} />
-              </div>
+                <div className="space-y-1 border-t pt-3 text-sm">
+                  <SummaryRow
+                    label={label('mar.billable')}
+                    value={`${toPersianDigits(Math.round(result.billable))} ${label('unit.hoursPerYear')}`}
+                  />
+                  <SummaryRow label={label('mar.total')} value={formatToman(result.total)} />
+                </div>
 
-              <Card>
-                <CardContent className="space-y-2">
+                <div className="border-t pt-3">
                   <div className="text-muted-foreground flex items-center gap-1.5 text-sm">
                     <span>{label('mar.overheadRatio')}</span>
-                    <InfoTooltip
-                      content={tooltip('mar.overheadRatio')}
-                      label={`${label('a11y.explain')} ${label('mar.overheadRatio')}`}
-                    />
+                    <InfoTooltip content={tooltip('mar.overheadRatio')} />
                   </div>
                   {result.overheadRatio !== null ? (
-                    <>
+                    <div className="mt-1 space-y-1">
                       <p className="text-2xl font-bold tabular-nums">
                         {formatPercent(result.overheadRatio)}
                       </p>
@@ -207,37 +168,45 @@ export function MarPage() {
                         statusLabel={BENCHMARK_STATUS_LABELS}
                         formatValue={(v) => formatPercent(v)}
                       />
-                    </>
+                    </div>
                   ) : (
-                    <p className="text-muted-foreground text-xs">{label('mar.overheadNA')}</p>
+                    <p className="text-muted-foreground mt-1 text-xs">{label('mar.overheadNA')}</p>
                   )}
-                </CardContent>
-              </Card>
-
-              <div data-tour="mar-chart">
-                <Suspense fallback={<Skeleton className="mx-auto h-64 w-64 rounded-full" />}>
-                  <CostDoughnut
-                    ariaLabel={`${label('mar.chartTitle')}: ${label('mar.direct')} ${formatToman(values.direct ?? 0)}، ${label('mar.overhead')} ${formatToman(values.overhead ?? 0)}، ${label('mar.profit')} ${formatToman(values.profitTarget ?? 0)}`}
-                    segments={[
-                      { label: label('mar.direct'), value: values.direct ?? 0 },
-                      { label: label('mar.overhead'), value: values.overhead ?? 0 },
-                      { label: label('mar.profit'), value: values.profitTarget ?? 0 },
-                    ]}
-                  />
-                </Suspense>
-              </div>
-            </>
+                </div>
+              </CardContent>
+            </Card>
           ) : (
             <Card>
-              <CardContent className="text-muted-foreground py-10 text-center">
+              <CardContent className="text-muted-foreground py-12 text-center">
                 {label('state.invalid')}
               </CardContent>
             </Card>
           )}
-
-          <ScenarioBar module="mar" inputs={values} onRestore={(inputs) => reset(inputs)} />
         </div>
       </div>
+
+      {/* ───── نمودار ترکیب هزینه (تمام‌عرض) ───── */}
+      {result ? (
+        <Card data-tour="mar-chart">
+          <CardHeader>
+            <CardTitle className="text-base">{label('mar.chartTitle')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Suspense fallback={<Skeleton className="mx-auto h-64 w-64 rounded-full" />}>
+              <CostDoughnut
+                ariaLabel={`${label('mar.chartTitle')}: ${label('mar.direct')} ${formatToman(values.direct ?? 0)}، ${label('mar.overhead')} ${formatToman(values.overhead ?? 0)}، ${label('mar.profit')} ${formatToman(values.profitTarget ?? 0)}`}
+                segments={[
+                  { label: label('mar.direct'), value: values.direct ?? 0 },
+                  { label: label('mar.overhead'), value: values.overhead ?? 0 },
+                  { label: label('mar.profit'), value: values.profitTarget ?? 0 },
+                ]}
+              />
+            </Suspense>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      <ScenarioBar module="mar" inputs={values} onRestore={(inputs) => reset(inputs)} />
     </div>
   );
 }

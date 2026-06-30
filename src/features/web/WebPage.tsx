@@ -21,6 +21,7 @@ import {
   NumberField,
   ScenarioBar,
   SliderField,
+  SummaryRow,
   TierCards,
 } from '@/components/common';
 import { RANGES, type MoneyRange } from '@/lib/pricing';
@@ -39,15 +40,6 @@ const META = MODULES.find((m) => m.id === 'web');
 function moneyRangeText(r: MoneyRange): string {
   if (r.min === r.max) return formatToman(r.min);
   return `${formatToman(r.min, { withUnit: false })} – ${formatToman(r.max)}`;
-}
-
-function SummaryRow({ label: rowLabel, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline justify-between gap-2">
-      <span className="text-muted-foreground shrink-0">{rowLabel}</span>
-      <span className="min-w-0 text-end break-words tabular-nums">{value}</span>
-    </div>
-  );
 }
 
 export function WebPage() {

@@ -15,8 +15,8 @@ import {
   FormSlider,
   InfoTooltip,
   ModuleHeader,
-  ResultCard,
   ScenarioBar,
+  SummaryRow,
 } from '@/components/common';
 import { RANGES } from '@/lib/pricing';
 import { formatPercent, formatToman, parsePersianNumber, toPersianDigits } from '@/lib/format';
@@ -66,8 +66,8 @@ export function AgencyPage() {
         onHelp={() => void startModuleTour('agency')}
       />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="space-y-6">
+      <div className="grid gap-6 lg:grid-cols-5">
+        <div className="space-y-6 lg:col-span-3">
           {/* نیروی کار + ASF */}
           <Card data-tour="agency-labor">
             <CardHeader>
@@ -211,73 +211,78 @@ export function AgencyPage() {
           </Card>
         </div>
 
-        {/* نتایج */}
-        <div className="space-y-4 lg:sticky lg:top-20 lg:self-start">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <ResultCard
-              label={label('agency.asf')}
-              tooltip={tooltip('agency.asf')}
-              value={asf !== null ? toPersianDigits(asf.toFixed(2)) : '—'}
-            />
-            <ResultCard
-              label={label('agency.agencyRate')}
-              value={rate !== null ? formatToman(rate) : '—'}
-            />
-          </div>
-
-          <ResultCard
-            label={label('agency.blended')}
-            tooltip={tooltip('agency.blended')}
-            value={blended !== null ? formatToman(blended) : '—'}
-            status="healthy"
-          />
-
-          {roleShares.length > 0 ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">{label('agency.donutTitle')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Suspense fallback={<Skeleton className="mx-auto h-56 w-56 rounded-full" />}>
-                  <CostDoughnut ariaLabel={label('agency.donutTitle')} segments={roleShares} />
-                </Suspense>
-              </CardContent>
-            </Card>
-          ) : null}
-
-          {/* حاشیه سود + محک */}
-          <Card>
-            <CardContent className="space-y-2">
-              <div className="text-muted-foreground flex items-center gap-1.5 text-sm">
-                <span>{label('agency.margin')}</span>
-                <InfoTooltip content={tooltip('agency.margin')} />
+        {/* ───── خلاصه‌ی زنده (۲/۵) ───── */}
+        <div className="lg:col-span-2">
+          <Card className="lg:sticky lg:top-20">
+            <CardHeader>
+              <CardTitle className="text-muted-foreground flex items-center gap-1.5 text-sm font-normal">
+                {label('agency.blended')}
+                <InfoTooltip content={tooltip('agency.blended')} />
+              </CardTitle>
+              <p className="text-success text-3xl font-bold break-words tabular-nums">
+                {blended !== null ? formatToman(blended) : '—'}
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-1 border-t pt-3 text-sm">
+                <SummaryRow
+                  label={label('agency.asf')}
+                  value={asf !== null ? `${toPersianDigits(asf.toFixed(2))}×` : '—'}
+                />
+                <SummaryRow
+                  label={label('agency.agencyRate')}
+                  value={rate !== null ? formatToman(rate) : '—'}
+                />
               </div>
-              {margin ? (
-                <>
-                  <p className="text-2xl font-bold tabular-nums">{formatPercent(margin.margin)}</p>
-                  <BenchmarkBar
-                    value={margin.margin}
-                    min={MARGIN_BENCHMARK.min}
-                    max={MARGIN_BENCHMARK.max}
-                    segments={MARGIN_BENCHMARK.segments}
-                    statusLabel={BENCHMARK_STATUS_LABELS}
-                    formatValue={(v) => formatPercent(v)}
-                  />
-                  {margin.status === 'danger' ? (
-                    <Alert variant="destructive">
-                      <AlertDescription>{message('marginTooLow')}</AlertDescription>
-                    </Alert>
-                  ) : null}
-                </>
-              ) : (
-                <p className="text-muted-foreground text-sm">{label('state.invalid')}</p>
-              )}
+
+              <div className="border-t pt-3">
+                <div className="text-muted-foreground flex items-center gap-1.5 text-sm">
+                  <span>{label('agency.margin')}</span>
+                  <InfoTooltip content={tooltip('agency.margin')} />
+                </div>
+                {margin ? (
+                  <div className="mt-1 space-y-2">
+                    <p className="text-2xl font-bold tabular-nums">
+                      {formatPercent(margin.margin)}
+                    </p>
+                    <BenchmarkBar
+                      value={margin.margin}
+                      min={MARGIN_BENCHMARK.min}
+                      max={MARGIN_BENCHMARK.max}
+                      segments={MARGIN_BENCHMARK.segments}
+                      statusLabel={BENCHMARK_STATUS_LABELS}
+                      formatValue={(v) => formatPercent(v)}
+                    />
+                    {margin.status === 'danger' ? (
+                      <Alert variant="destructive">
+                        <AlertDescription>{message('marginTooLow')}</AlertDescription>
+                      </Alert>
+                    ) : null}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground mt-1 text-sm">{label('state.invalid')}</p>
+                )}
+              </div>
             </CardContent>
           </Card>
-
-          <ScenarioBar module="agency" inputs={values} onRestore={(inputs) => reset(inputs)} />
         </div>
       </div>
+
+      {/* ───── دونات سهم نقش‌ها (تمام‌عرض) ───── */}
+      {roleShares.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{label('agency.donutTitle')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Suspense fallback={<Skeleton className="mx-auto h-56 w-56 rounded-full" />}>
+              <CostDoughnut ariaLabel={label('agency.donutTitle')} segments={roleShares} />
+            </Suspense>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      <ScenarioBar module="agency" inputs={values} onRestore={(inputs) => reset(inputs)} />
     </div>
   );
 }

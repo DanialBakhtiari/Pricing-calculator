@@ -11,8 +11,8 @@ import {
   FormNumber,
   FormPercent,
   ModuleHeader,
-  ResultCard,
   ScenarioBar,
+  SummaryRow,
 } from '@/components/common';
 import { formatPercent, formatToman, toPersianDigits } from '@/lib/format';
 import { startModuleTour } from '@/lib/onboarding/runTour';
@@ -32,6 +32,16 @@ const RoiChart = lazy(() => import('@/components/charts/RoiChart'));
 
 const META = MODULES.find((m) => m.id === 'seo');
 
+/** کارت قهرمانِ خلاصه — عنوان + عدد بزرگ. */
+function SummaryHero({ title, value }: { title: string; value: string }) {
+  return (
+    <CardHeader>
+      <CardTitle className="text-muted-foreground text-sm font-normal">{title}</CardTitle>
+      <p className="text-success text-3xl font-bold break-words tabular-nums">{value}</p>
+    </CardHeader>
+  );
+}
+
 export function SeoPage() {
   const { control, reset } = useForm<SeoFormValues>({
     resolver: zodResolver(seoSchema) as Resolver<SeoFormValues>,
@@ -44,6 +54,7 @@ export function SeoPage() {
   const performance = computePerformance(values);
   const audit = computeAudit(values);
   const roi = computeRoi(values);
+  const dash = '—';
 
   return (
     <div className="space-y-6">
@@ -66,10 +77,10 @@ export function SeoPage() {
           </TabsTrigger>
         </TabsList>
 
-        {/* Retainer ماهانه */}
+        {/* ───── Retainer ماهانه ───── */}
         <TabsContent value="retainer" className="mt-4">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
+          <div className="grid gap-6 lg:grid-cols-5">
+            <Card className="lg:col-span-3">
               <CardContent className="space-y-5 pt-6">
                 <FormNumber
                   control={control}
@@ -112,20 +123,28 @@ export function SeoPage() {
                 />
               </CardContent>
             </Card>
-            <div>
-              <ResultCard
-                label={label('seo.retainerResult')}
-                value={retainer !== null ? formatToman(retainer) : '—'}
-                status="healthy"
-              />
+
+            <div className="lg:col-span-2">
+              <Card className="lg:sticky lg:top-20">
+                <SummaryHero
+                  title={label('seo.retainerResult')}
+                  value={retainer !== null ? formatToman(retainer) : dash}
+                />
+                <CardContent className="space-y-1 border-t pt-4 text-sm">
+                  <SummaryRow
+                    label={label('seo.annual')}
+                    value={retainer !== null ? formatToman(retainer * 12) : dash}
+                  />
+                </CardContent>
+              </Card>
             </div>
           </div>
         </TabsContent>
 
-        {/* عملکردمحور */}
+        {/* ───── عملکردمحور ───── */}
         <TabsContent value="performance" className="mt-4">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
+          <div className="grid gap-6 lg:grid-cols-5">
+            <Card className="lg:col-span-3">
               <CardContent className="space-y-5 pt-6">
                 <FormMoney
                   control={control}
@@ -160,26 +179,45 @@ export function SeoPage() {
                 />
               </CardContent>
             </Card>
-            <div className="space-y-4">
-              <ResultCard
-                label={label('seo.performanceResult')}
-                value={performance ? formatToman(performance.payment) : '—'}
-              />
-              {performance ? (
-                <Alert variant={performance.safe ? 'default' : 'destructive'}>
-                  <AlertDescription>
-                    {performance.safe ? label('seo.performanceSafe') : message('performanceUnsafe')}
-                  </AlertDescription>
-                </Alert>
-              ) : null}
+
+            <div className="space-y-4 lg:col-span-2">
+              <Card className="lg:sticky lg:top-20">
+                <SummaryHero
+                  title={label('seo.performanceResult')}
+                  value={performance ? formatToman(performance.payment) : dash}
+                />
+                <CardContent className="space-y-3 border-t pt-4">
+                  <div className="space-y-1 text-sm">
+                    <SummaryRow
+                      label={label('seo.baseRetainer')}
+                      value={values.baseRetainer != null ? formatToman(values.baseRetainer) : dash}
+                    />
+                    <SummaryRow
+                      label={label('seo.bonusTotal')}
+                      value={formatToman(
+                        (values.milestones ?? 0) * (values.bonusPerMilestone ?? 0),
+                      )}
+                    />
+                  </div>
+                  {performance ? (
+                    <Alert variant={performance.safe ? 'default' : 'destructive'}>
+                      <AlertDescription>
+                        {performance.safe
+                          ? label('seo.performanceSafe')
+                          : message('performanceUnsafe')}
+                      </AlertDescription>
+                    </Alert>
+                  ) : null}
+                </CardContent>
+              </Card>
             </div>
           </div>
         </TabsContent>
 
-        {/* حسابرسی */}
+        {/* ───── حسابرسی ───── */}
         <TabsContent value="audit" className="mt-4">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
+          <div className="grid gap-6 lg:grid-cols-5">
+            <Card className="lg:col-span-3">
               <CardContent className="space-y-3 pt-6">
                 <Controller
                   control={control}
@@ -194,7 +232,7 @@ export function SeoPage() {
                         return (
                           <label
                             key={c.id}
-                            className="flex cursor-pointer items-center gap-2 text-sm"
+                            className="flex cursor-pointer items-center gap-2 py-1 text-sm"
                           >
                             <Checkbox
                               checked={checked}
@@ -215,30 +253,41 @@ export function SeoPage() {
                 />
               </CardContent>
             </Card>
-            <div className="space-y-3">
-              <ResultCard
-                label={label('seo.auditPrice')}
-                tooltip={tooltip('seo.audit')}
-                value={audit ? formatToman(audit.price) : '—'}
-                hint={
-                  audit
-                    ? `${label('seo.auditHours')}: ${toPersianDigits(Math.round(audit.hours))} ${label('unit.hours')}`
-                    : undefined
-                }
-              />
-              <p className="text-muted-foreground text-xs">{label('seo.auditBand')}</p>
+
+            <div className="lg:col-span-2">
+              <Card className="lg:sticky lg:top-20">
+                <SummaryHero
+                  title={label('seo.auditPrice')}
+                  value={audit ? formatToman(audit.price) : dash}
+                />
+                <CardContent className="space-y-1 border-t pt-4 text-sm">
+                  <SummaryRow
+                    label={label('seo.auditHours')}
+                    value={
+                      audit
+                        ? `${toPersianDigits(Math.round(audit.hours))} ${label('unit.hours')}`
+                        : dash
+                    }
+                  />
+                  <SummaryRow
+                    label={label('seo.auditComponents')}
+                    value={toPersianDigits((values.auditComponentIds ?? []).length)}
+                  />
+                  <p className="text-muted-foreground pt-2 text-xs">{label('seo.auditBand')}</p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </TabsContent>
       </Tabs>
 
-      {/* ROI — همیشه دیده می‌شود */}
+      {/* ───── ROI مشتری ───── */}
       <Card data-tour="seo-roi">
         <CardHeader>
           <CardTitle className="text-base">{label('seo.roiGroup')}</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-6 md:grid-cols-2">
-          <div className="space-y-5">
+        <CardContent className="grid gap-6 lg:grid-cols-5">
+          <div className="space-y-5 lg:col-span-2">
             <FormPercent
               control={control}
               name="cr"
@@ -266,16 +315,38 @@ export function SeoPage() {
             />
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-4 lg:col-span-3">
             {roi ? (
               <>
-                <ResultCard
-                  label={label('seo.roiResult')}
-                  value={formatPercent(roi.roi)}
-                  tooltip={tooltip('seo.roi')}
-                  status={roi.roi >= 0 ? 'healthy' : 'danger'}
-                  hint={`${label('seo.monthlyValue')}: ${formatToman(roi.vMonthly)}`}
-                />
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <Card>
+                    <CardContent className="space-y-1 pt-6">
+                      <p className="text-muted-foreground text-sm">{label('seo.roiResult')}</p>
+                      <p
+                        className={`text-3xl font-bold tabular-nums ${roi.roi >= 0 ? 'text-success' : 'text-destructive'}`}
+                      >
+                        {formatPercent(roi.roi)}
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="space-y-1 pt-6">
+                      <p className="text-muted-foreground text-sm">{label('seo.monthlyValue')}</p>
+                      <p className="text-xl font-bold break-words tabular-nums">
+                        {formatToman(roi.vMonthly)}
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="space-y-1 pt-6">
+                      <p className="text-muted-foreground text-sm">{label('seo.roiMonthlyNet')}</p>
+                      <p className="text-xl font-bold break-words tabular-nums">
+                        {formatToman(roi.vMonthly - (values.monthlyRetainer ?? 0))}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+
                 <Suspense fallback={<Skeleton className="h-56 w-full" />}>
                   <RoiChart
                     monthlyValue={roi.vMonthly}
@@ -285,6 +356,7 @@ export function SeoPage() {
                     ariaLabel={`${label('seo.roiResult')} ${formatPercent(roi.roi)}`}
                   />
                 </Suspense>
+
                 <Alert data-tour="seo-pitch">
                   <AlertDescription>
                     <span className="font-medium">{label('seo.pitchTitle')}: </span>

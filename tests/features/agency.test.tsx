@@ -59,7 +59,7 @@ describe('AgencyPage', () => {
       </MemoryRouter>,
     );
     expect(await screen.findByText('۷۰۰٬۰۰۰ تومان')).toBeInTheDocument(); // blended
-    expect(screen.getByText('۲٫۲۰')).toBeInTheDocument(); // ASF
+    expect(screen.getByText('۲٫۲۰×')).toBeInTheDocument(); // ASF
     expect(screen.getByText('۳۰٪')).toBeInTheDocument(); // margin
   });
 });
