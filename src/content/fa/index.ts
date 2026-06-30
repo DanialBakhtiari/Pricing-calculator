@@ -10,6 +10,8 @@ export type { MessageKey } from './messages';
 export type { LabelKey, ModuleId } from './labels';
 export { tours } from './tours';
 export type { TourKey, TourStep } from './tours';
+export { WEB_TIERS } from './web';
+export type { WebTierContentId } from './web';
 
 /** متن tooltip یک فیلد. */
 export const tooltip = (key: TooltipKey): string => tooltips[key];

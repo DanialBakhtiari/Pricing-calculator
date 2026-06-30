@@ -55,6 +55,18 @@
 - **پوشش**: `src/lib/onboarding/**` (glue مرورگری driver.js) از coverage مستثنا شد. بقیه‌ی lib همچنان ۱۰۰٪. `computeMarResult` (در features، خالص) با Test Vector تست شد.
 - **`react-refresh/only-export-components`** برای `src/app/router.tsx` غیرفعال شد (فایل پیکربندی router، نه ماژول کامپوننت؛ lazyها عمدی این‌جا هستند).
 
+## 2026-06-30 — Phase 4 (Web/WordPress Module)
+
+- **خط لوله از موتور**: `buildProposalPrice({hEstimate, rate, cm, rb})` همه‌ی قیمت‌گذاری و breakdown آبشاری را می‌دهد؛ هیچ فرمولی در UI تکرار نشد.
+- **Builder factor (§2.5)**: برای ورودی‌های بازه‌دار (custom_theme 1.8–2.2) میانه‌ی بازه استفاده شد (۲.۰)؛ standard=1، custom_style=1.3. Builder به‌صورت ضریب روی ساعت پایه اعمال می‌شود (`hEstimate = hours × factor`).
+- **RB جمع‌شونده (§2.4)**: `rbTotal` = مجموع فاکتورهای انتخاب‌شده، سقف ۱.۰.
+- **سه سطح (Price Anchoring §2.9)** — همه از خروجی موتور (بدون ضریب ابداعی): پایه=`afterCM` (بدون بافر ریسک)، حرفه‌ای=`final` (پیشنهادی، هایلایت)، سازمانی=`final + maintenanceRetainer(final).max + performanceBudget(final).max`. نام/ویژگی هر سطح از `content/fa/web.ts`.
+- **WaterfallChart**: میله‌های شناور `[from,to]` روی Bar چارت (بدون پلاگین اضافه، طبق architecture §13). سهم base→CM→RB→نهایی.
+- **TierCards** کامپوننت مشترک (design §5): سطح پیشنهادی با حاشیه‌ی برند + badge متنی «پیشنهادی» (نه فقط رنگ).
+- **تزریق نرخ**: منبع نرخ = MAR (از appStore.activeRate) یا نرخ بازار دستی؛ اگر MAR انتخاب شد ولی هنوز محاسبه نشده، هشدار «اول ماژول MAR».
+- باندل اولیه ۱۵۰٫۶KB gz (زیر سقف ۱۷۰)؛ WebPage و WaterfallChart lazy chunk.
+- **راستی‌آزمایی مستقل (۱ reviewer):** یک باگ واقعی — افزونه‌ی چندزبانه (§2.7، +۲۰٪ به ساعت پایه) فقط نمایشی بود و روی قیمت اثر نمی‌گذاشت. اصلاح شد: ساعت پایه با `multilangHours` تعدیل و به `buildProposalPrice` داده می‌شود؛ تست افزوده شد (۲ زبان ⇒ ۴۲۰ ساعت ⇒ نهایی ۴۷۲٫۵M).
+
 ### تصمیمات باز (طبق architecture §۱۳ — در فاز مربوطه قطعی می‌شوند)
 - روش PDF: شروع با چاپ مرورگر (`react-to-print`)، ارتقا به `html2canvas+jsPDF` در صورت نیاز (تصمیم نهایی: فاز ۶).
 - Waterfall: پیاده‌سازی دستی روی Bar چارت بدون پلاگین اضافه (حفظ سبکی باندل).

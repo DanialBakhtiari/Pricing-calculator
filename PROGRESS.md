@@ -10,7 +10,7 @@
 | ۱ | هسته‌ی موتور قیمت‌گذاری | ✅ | ۵۹ تست، پوشش lib/pricing ۱۰۰٪، همه Test Vectorها سبز، راستی‌آزمایی ۶-عاملی |
 | ۲ | کمکی‌ها و پایه‌های UI | ✅ | ۸۸ تست، format/content/store/۸ کامپوننت/router/داشبورد، راستی‌آزمایی ۲-عاملی |
 | ۳ | ماژول MAR | ✅ | فرم+نتیجه+CostDoughnut+سناریو+tour، ۹۸ تست، نرخ فعال تزریق، باندل ۱۴۹KB gz |
-| ۴ | ماژول وب/وردپرس | ⬜ | — |
+| ۴ | ماژول وب/وردپرس | ✅ | Cheat Sheet+CM/RB/Builder+افزودنی+Waterfall+۳سطح، ۱۰۶ تست، Vector 337.5M |
 | ۵ | ماژول سئو/ROI + آژانس | ⬜ | — |
 | ۶ | قابلیت‌های فرابخشی (PDF/سناریو/embed) | ⬜ | — |
 | ۷ | PWA، عملکرد، A11y، e2e، انتشار | ⬜ | — |
@@ -64,3 +64,14 @@
 **بهینه‌سازی:** route-level code-splitting ⇒ باندل اولیه ۱۸۱→۱۴۹KB gz (زیر سقف ۱۷۰). chart.js/driver.js/MarPage همه lazy chunk.
 
 **ریسک باقی‌مانده:** رنگ oklch در canvas نیاز مرورگر مدرن دارد (۲۰۲۶ اوکی). تور driver.js در فاز ۶ (تور خوش‌آمد) و ۷ (axe) صیقل بخورد.
+
+### فاز ۴ — ماژول وب/وردپرس (✅ تمام — 2026-06-30)
+معیار پذیرش: adjustedPrice(150M,1.8,0.25)=337.5M در UI؛ waterfall سهم هر ضریب؛ سه سطح؛ tour+tooltip کامل.
+
+**چه ساختم:** `features/web/{webForm,WebPage}` — فرم RHF: انتخاب از Cheat Sheet (پرکردن خودکار ساعت/CM)، نرخ (MAR از appStore یا بازار دستی)، CM اسلایدر، RB چک‌باکس جمع‌شونده، Builder select، افزودنی‌ها (نگهداری/CWV سوییچ + چندزبانه). همه از موتور فاز ۱ (`computeWebResult`→`buildProposalPrice`/`maintenanceRetainer`/`performanceBudget`/`multilangHours`). `WaterfallChart` (lazy، میله‌های شناور)، `TierCards` (سه سطح، حرفه‌ای هایلایت). ScenarioBar + تور driver.js.
+
+**تست‌های سبز:** ۱۰۶ تست؛ Vector adjustedPrice=۳۳۷٫۵M، سه سطح، multilang، helperها (rbTotal/builderFactor)، WebPage render. پوشش lib ۱۰۰٪. `typecheck/lint/format/build` سبز. باندل اولیه ۱۵۰٫۶KB gz.
+
+**راستی‌آزمایی مستقل (۱ reviewer):** ۱ باگ واقعی یافت و رفع شد — چندزبانه روی قیمت اعمال نمی‌شد (فقط نمایشی). حالا ساعت پایه را تعدیل می‌کند. (نکته‌ی ASF در waterfall: web همیشه ASF=1، پس مرحله‌اش صفر و حذف‌شده — درست.)
+
+**ریسک باقی‌مانده:** سه‌سطحی‌سازی (afterCM/final/final+extras) یک تفسیر قابل‌دفاع از §2.9 است (سند فرمول دقیق سه قیمت را نمی‌دهد). در فاز ۶ (پروپوزال) بازبینی شود.

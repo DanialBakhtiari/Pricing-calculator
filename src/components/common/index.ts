@@ -7,4 +7,5 @@ export * from './ResultCard';
 export * from './BenchmarkBar';
 export * from './ModuleHeader';
 export * from './ScenarioBar';
+export * from './TierCards';
 export * from './benchmark';
