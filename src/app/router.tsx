@@ -13,6 +13,7 @@ const PlaygroundPage = lazy(() =>
 );
 const MarPage = lazy(() => import('@/features/mar/MarPage').then((m) => ({ default: m.MarPage })));
 const WebPage = lazy(() => import('@/features/web/WebPage').then((m) => ({ default: m.WebPage })));
+const SeoPage = lazy(() => import('@/features/seo/SeoPage').then((m) => ({ default: m.SeoPage })));
 
 // Hash router: زیر هر مسیر/ساب‌دامین و در حالت embed (iframe) بدون پیکربندی سرور کار می‌کند.
 export const router = createHashRouter([
@@ -29,6 +30,8 @@ export const router = createHashRouter([
             <MarPage />
           ) : m.id === 'web' ? (
             <WebPage />
+          ) : m.id === 'seo' ? (
+            <SeoPage />
           ) : (
             <ModulePlaceholder moduleId={m.id} />
           ),
