@@ -177,7 +177,7 @@ export function MarPage() {
                 status="healthy"
               />
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <ResultCard
                   label={label('mar.billable')}
                   value={`${toPersianDigits(Math.round(result.billable))} ${label('unit.hoursPerYear')}`}

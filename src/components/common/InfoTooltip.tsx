@@ -31,7 +31,9 @@ export function InfoTooltip({
       type="button"
       aria-label={label}
       className={cn(
-        'text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex size-5 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-2',
+        'text-muted-foreground hover:text-foreground focus-visible:ring-ring relative inline-flex size-5 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-2',
+        // ناحیه‌ی لمسِ ۴۴px بدون بزرگ‌کردن آیکن
+        "before:absolute before:-inset-3 before:content-['']",
         className,
       )}
     >

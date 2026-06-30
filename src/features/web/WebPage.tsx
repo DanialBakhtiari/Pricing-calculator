@@ -331,10 +331,10 @@ export function WebPage() {
                   <CardContent className="space-y-1 text-sm">
                     {result.maintenance ? (
                       <div className="flex justify-between gap-2">
-                        <span className="text-muted-foreground">
+                        <span className="text-muted-foreground min-w-0 truncate">
                           {label('web.maintenanceLine')}
                         </span>
-                        <span className="tabular-nums">
+                        <span className="shrink-0 text-end tabular-nums">
                           {formatToman(result.maintenance.min, { withUnit: false })} –{' '}
                           {formatToman(result.maintenance.max)}
                         </span>
@@ -342,10 +342,10 @@ export function WebPage() {
                     ) : null}
                     {result.performance ? (
                       <div className="flex justify-between gap-2">
-                        <span className="text-muted-foreground">
+                        <span className="text-muted-foreground min-w-0 truncate">
                           {label('web.performanceLine')}
                         </span>
-                        <span className="tabular-nums">
+                        <span className="shrink-0 text-end tabular-nums">
                           {formatToman(result.performance.min, { withUnit: false })} –{' '}
                           {formatToman(result.performance.max)}
                         </span>
@@ -353,8 +353,10 @@ export function WebPage() {
                     ) : null}
                     {result.multilangExtraHours ? (
                       <div className="flex justify-between gap-2">
-                        <span className="text-muted-foreground">{label('web.multilangExtra')}</span>
-                        <span className="tabular-nums">
+                        <span className="text-muted-foreground min-w-0 truncate">
+                          {label('web.multilangExtra')}
+                        </span>
+                        <span className="shrink-0 text-end tabular-nums">
                           +{toPersianDigits(Math.round(result.multilangExtraHours))}{' '}
                           {label('unit.hours')}
                         </span>
@@ -363,50 +365,6 @@ export function WebPage() {
                   </CardContent>
                 </Card>
               )}
-
-              <Card data-tour="web-waterfall">
-                <CardHeader>
-                  <CardTitle className="text-base">{label('web.waterfallTitle')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Suspense fallback={<Skeleton className="h-64 w-full" />}>
-                    <WaterfallChart
-                      ariaLabel={`${label('web.waterfallTitle')}: ${label('web.finalPrice')} ${formatToman(result.proposal.final)}`}
-                      segments={[
-                        {
-                          label: label('breakdown.base'),
-                          from: 0,
-                          to: result.proposal.base,
-                          kind: 'base',
-                        },
-                        {
-                          label: label('breakdown.cm'),
-                          from: result.proposal.base,
-                          to: result.proposal.afterCM,
-                          kind: 'step',
-                        },
-                        {
-                          label: label('breakdown.rb'),
-                          from: result.proposal.afterCM,
-                          to: result.proposal.afterRB,
-                          kind: 'step',
-                        },
-                        {
-                          label: label('web.finalPrice'),
-                          from: 0,
-                          to: result.proposal.final,
-                          kind: 'total',
-                        },
-                      ]}
-                    />
-                  </Suspense>
-                </CardContent>
-              </Card>
-
-              <div data-tour="web-tiers" className="space-y-2">
-                <h2 className="text-base font-semibold">{label('web.tiersTitle')}</h2>
-                <TierCards tiers={tierCards} />
-              </div>
             </>
           ) : (
             <Card>
@@ -419,6 +377,54 @@ export function WebPage() {
           <ScenarioBar module="web" inputs={values} onRestore={(inputs) => reset(inputs)} />
         </div>
       </div>
+
+      {result ? (
+        <>
+          <Card data-tour="web-waterfall">
+            <CardHeader>
+              <CardTitle className="text-base">{label('web.waterfallTitle')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+                <WaterfallChart
+                  ariaLabel={`${label('web.waterfallTitle')}: ${label('web.finalPrice')} ${formatToman(result.proposal.final)}`}
+                  segments={[
+                    {
+                      label: label('breakdown.base'),
+                      from: 0,
+                      to: result.proposal.base,
+                      kind: 'base',
+                    },
+                    {
+                      label: label('breakdown.cm'),
+                      from: result.proposal.base,
+                      to: result.proposal.afterCM,
+                      kind: 'step',
+                    },
+                    {
+                      label: label('breakdown.rb'),
+                      from: result.proposal.afterCM,
+                      to: result.proposal.afterRB,
+                      kind: 'step',
+                    },
+                    {
+                      label: label('web.finalPrice'),
+                      from: 0,
+                      to: result.proposal.final,
+                      kind: 'total',
+                    },
+                  ]}
+                />
+              </Suspense>
+            </CardContent>
+          </Card>
+
+          <div data-tour="web-tiers" className="space-y-2">
+            <h2 className="text-base font-semibold">{label('web.tiersTitle')}</h2>
+            <TierCards tiers={tierCards} />
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }

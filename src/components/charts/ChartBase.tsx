@@ -34,7 +34,7 @@ export function ChartBase({
         role="img"
         aria-label={ariaLabel}
         aria-describedby={tableId}
-        className={cn('relative mx-auto max-w-sm', className)}
+        className={cn('relative mx-auto w-full', className)}
       >
         {children}
       </div>

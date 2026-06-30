@@ -26,6 +26,7 @@ export function AppLayout() {
             <Button
               variant="outline"
               size="icon"
+              className="size-11"
               onClick={toggleTheme}
               aria-label={theme === 'dark' ? label('theme.toLight') : label('theme.toDark')}
             >

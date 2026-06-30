@@ -28,7 +28,7 @@ export function ResultCard({ label, value, tooltip, status, hint, ...rest }: Res
         </div>
         <p
           className={cn(
-            'text-3xl font-bold tabular-nums',
+            'text-2xl font-bold break-words tabular-nums sm:text-3xl',
             status ? STATUS_TEXT[status] : 'text-foreground',
           )}
         >

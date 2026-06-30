@@ -50,8 +50,9 @@ export function ScenarioBar({ module, inputs, onRestore }: ScenarioBarProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={label('scenario.namePlaceholder')}
+            className="h-11"
           />
-          <Button type="button" size="sm" onClick={handleSave}>
+          <Button type="button" className="h-11 shrink-0" onClick={handleSave}>
             <Save aria-hidden />
             {label('action.save')}
           </Button>
@@ -67,6 +68,7 @@ export function ScenarioBar({ module, inputs, onRestore }: ScenarioBarProps) {
                     type="button"
                     variant="ghost"
                     size="sm"
+                    className="h-11"
                     onClick={() => onRestore(s.inputs)}
                   >
                     <RotateCcw aria-hidden />
@@ -76,6 +78,7 @@ export function ScenarioBar({ module, inputs, onRestore }: ScenarioBarProps) {
                     type="button"
                     variant="ghost"
                     size="icon"
+                    className="size-11"
                     aria-label={`${label('action.remove')} ${s.title}`}
                     onClick={() => handleDelete(s.id)}
                   >

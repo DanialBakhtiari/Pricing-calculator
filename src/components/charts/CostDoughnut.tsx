@@ -65,7 +65,12 @@ export default function CostDoughnut({ segments, ariaLabel }: CostDoughnutProps)
   const dataTable = segments.map((s) => ({ label: s.label, value: formatToman(s.value) }));
 
   return (
-    <ChartBase ariaLabel={ariaLabel} dataTable={dataTable} onDownload={download}>
+    <ChartBase
+      ariaLabel={ariaLabel}
+      dataTable={dataTable}
+      onDownload={download}
+      className="max-w-sm"
+    >
       <Doughnut ref={ref} data={data} options={options} aria-hidden />
     </ChartBase>
   );

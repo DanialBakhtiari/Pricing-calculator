@@ -126,18 +126,20 @@ export function AgencyPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               {fields.map((f, i) => (
-                <div key={f.id} className="flex items-end gap-2">
-                  <div className="flex-1 space-y-1">
+                <div key={f.id} className="flex flex-wrap items-end gap-2 sm:flex-nowrap">
+                  <div className="w-full space-y-1 sm:flex-1">
                     <Label htmlFor={`role-${f.id}`} className="text-xs">
                       {label('agency.role')}
                     </Label>
                     <Controller
                       control={control}
                       name={`roleLines.${i}.role`}
-                      render={({ field }) => <Input id={`role-${f.id}`} {...field} />}
+                      render={({ field }) => (
+                        <Input id={`role-${f.id}`} className="h-11" {...field} />
+                      )}
                     />
                   </div>
-                  <div className="w-20">
+                  <div className="flex-1 sm:w-20 sm:flex-none">
                     <Controller
                       control={control}
                       name={`roleLines.${i}.hours`}
@@ -155,7 +157,7 @@ export function AgencyPage() {
                       )}
                     />
                   </div>
-                  <div className="w-28">
+                  <div className="flex-1 sm:w-28 sm:flex-none">
                     <Controller
                       control={control}
                       name={`roleLines.${i}.rate`}
@@ -211,7 +213,7 @@ export function AgencyPage() {
 
         {/* نتایج */}
         <div className="space-y-4 lg:sticky lg:top-20 lg:self-start">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <ResultCard
               label={label('agency.asf')}
               tooltip={tooltip('agency.asf')}

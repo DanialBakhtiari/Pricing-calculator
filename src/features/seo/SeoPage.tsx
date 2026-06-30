@@ -54,10 +54,16 @@ export function SeoPage() {
       />
 
       <Tabs defaultValue="retainer" data-tour="seo-model">
-        <TabsList>
-          <TabsTrigger value="retainer">{label('seo.modeRetainer')}</TabsTrigger>
-          <TabsTrigger value="performance">{label('seo.modePerformance')}</TabsTrigger>
-          <TabsTrigger value="audit">{label('seo.modeAudit')}</TabsTrigger>
+        <TabsList className="h-auto w-full flex-wrap">
+          <TabsTrigger value="retainer" className="whitespace-normal">
+            {label('seo.modeRetainer')}
+          </TabsTrigger>
+          <TabsTrigger value="performance" className="whitespace-normal">
+            {label('seo.modePerformance')}
+          </TabsTrigger>
+          <TabsTrigger value="audit" className="whitespace-normal">
+            {label('seo.modeAudit')}
+          </TabsTrigger>
         </TabsList>
 
         {/* Retainer ماهانه */}
