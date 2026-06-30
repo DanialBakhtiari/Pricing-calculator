@@ -8,7 +8,7 @@
 |:---:|:---|:---:|:---|
 | ۰ | اسکلت و ابزار (Scaffold) | ✅ | typecheck/lint/test/build سبز، dev بالا، bundle 72.5KB gz |
 | ۱ | هسته‌ی موتور قیمت‌گذاری | ✅ | ۵۹ تست، پوشش lib/pricing ۱۰۰٪، همه Test Vectorها سبز، راستی‌آزمایی ۶-عاملی |
-| ۲ | کمکی‌ها و پایه‌های UI | ⬜ | — |
+| ۲ | کمکی‌ها و پایه‌های UI | ✅ | ۸۸ تست، format/content/store/۸ کامپوننت/router/داشبورد، راستی‌آزمایی ۲-عاملی |
 | ۳ | ماژول MAR | ⬜ | — |
 | ۴ | ماژول وب/وردپرس | ⬜ | — |
 | ۵ | ماژول سئو/ROI + آژانس | ⬜ | — |
@@ -40,3 +40,14 @@
 **راستی‌آزمایی مستقل:** Workflow با ۶ verifier موازی، spec را تازه خواندند. ۴ منطبق کامل؛ ۲ یافته‌ی SEO اعمال شد (قاعده‌ی دو شرطی §۳.۲ + نام‌گذاری schema). جزئیات در DECISIONS.
 
 **ریسک باقی‌مانده:** zod هنوز در باندل اولیه نیست (موتور را UI فاز ۳ import می‌کند)؛ اثر باندل zod در فاز ۷ سنجیده شود. توابع `pluginVsCustom`/`multilangHours`/`performanceBudget` خروجی‌های float دارند — UI باید با `formatToman` گرد کند (موتور گرد نمی‌کند، طبق Spec).
+
+### فاز ۲ — کمکی‌ها و پایه‌های UI (✅ تمام — 2026-06-30)
+معیار پذیرش: کامپوننت‌ها در صفحه‌ی نمونه کار می‌کنند؛ ورودی فارسی parse/format؛ tooltip دسکتاپ(hover)+موبایل(tap)؛ تست format و InfoTooltip سبز.
+
+**چه ساختم:** `lib/format` (toPersianDigits/parsePersianNumber/formatToman/formatPercent)، `content/fa` (tooltips/tours/messages/labels + accessorهای `label/message/tooltip`)، `lib/storage/appStore` (zustand+persist: theme/activeRate/scenarios/welcomeTour). ۱۷ کامپوننت shadcn + ۸ کامپوننت سفارشی (InfoTooltip/NumberField/MoneyField/PercentField/SliderField/ResultCard/BenchmarkBar/ModuleHeader/ScenarioBar). hash router + داشبورد + صفحات placeholder ماژول‌ها + صفحه‌ی Playground (نمونه‌ی یکپارچه فیلد→موتور→فرمت).
+
+**تست‌های سبز:** ۸۸ تست (۱۲ فایل) شامل format، InfoTooltip (tap→popover)، NumberField (parse فارسی + stepper + خطا/aria)، appStore، Playground (محاسبه‌ی واقعی ۳۳۷٬۵۰۰٬۰۰۰). پوشش lib کلی ۱۰۰٪ خط/۹۶٪ شاخه، lib/pricing ۱۰۰٪. `typecheck/lint/format/build` سبز؛ dev با `dir="rtl"` بالا.
+
+**راستی‌آزمایی مستقل (۲ reviewer):** ۷ یافته؛ ۶ اعمال شد — unit پیش‌فرض MoneyField/PercentField از content؛ هدف لمس stepperها ۳۶→۴۴px؛ حذف `role="tooltip"` ناقص؛ aria-labelledby اسلایدر؛ Label متصل (sr-only) در ScenarioBar. ۱ رد شد (حذف `dir="rtl"` اسلایدر — Radix dir سند را ارث نمی‌برد؛ حذف، جهت RTL را می‌شکست).
+
+**ریسک باقی‌مانده:** باندل اولیه ۱۶۵٫۶KB gz (نزدیک سقف ۱۷۰)؛ chart.js/driver.js/PDF فازهای بعد باید lazy شوند. هدف لمس آیکن «!» (size-5) در فاز ۷ (axe/Lighthouse) بازبینی شود.

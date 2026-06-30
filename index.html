@@ -12,14 +12,16 @@
     />
     <script>
       // Set theme before paint to avoid flash of incorrect theme.
+      // Reads the persisted zustand appStore blob (key: pricing:app:v1).
       (function () {
         try {
-          var stored = localStorage.getItem('pricing:theme');
+          var raw = localStorage.getItem('pricing:app:v1');
+          var stored = raw ? JSON.parse(raw).state.theme : null;
           var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           var dark = stored ? stored === 'dark' : prefersDark;
           document.documentElement.classList.toggle('dark', dark);
         } catch (e) {
-          /* localStorage unavailable; ignore */
+          /* storage unavailable or malformed; fall back to light */
         }
       })();
     </script>

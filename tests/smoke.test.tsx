@@ -2,28 +2,35 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { App } from '@/app/App';
+import { useAppStore } from '@/lib/storage/appStore';
 
-describe('App shell (phase 0)', () => {
+describe('App shell (dashboard + theme)', () => {
   beforeEach(() => {
     document.documentElement.classList.remove('dark');
     localStorage.clear();
+    useAppStore.setState({
+      theme: 'light',
+      activeRate: null,
+      welcomeTourDone: false,
+      scenarios: [],
+    });
   });
 
-  it('renders the Persian welcome heading', () => {
+  it('renders the dashboard heading', async () => {
     render(<App />);
     expect(
-      screen.getByRole('heading', { level: 1, name: 'ماشین‌حساب قیمت‌گذاری' }),
+      await screen.findByRole('heading', { level: 1, name: 'ماشین‌حساب قیمت‌گذاری' }),
     ).toBeInTheDocument();
   });
 
-  it('toggles the dark theme class on <html> and persists it', async () => {
+  it('toggles the dark theme via the app store and applies the class', async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const toggle = screen.getByRole('button', { name: 'تیره کردن تم' });
+    const toggle = await screen.findByRole('button', { name: 'تیره کردن تم' });
     await user.click(toggle);
 
+    expect(useAppStore.getState().theme).toBe('dark');
     expect(document.documentElement.classList.contains('dark')).toBe(true);
-    expect(localStorage.getItem('pricing:theme')).toBe('dark');
   });
 });

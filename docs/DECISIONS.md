@@ -28,6 +28,20 @@
 - **پوشش:** `src/lib/pricing` = ۱۰۰٪ (statements/branches/functions/lines)؛ آستانه‌ی per-glob در `vite.config.ts` + آستانه‌ی کلی lib ۹۰٪.
 - **راستی‌آزمایی مستقل (docs/07 §۴):** ۶ verifier موازی، هر کدام spec را تازه خواند و impl را سنجید. ۴ ماژول منطبق کامل. دو یافته‌ی SEO اعمال شد: (۱) قاعده‌ی ایمنی §۳.۲ **دو شرطی** است (پوشش پایه ≥۷۰٪ **و** RB ≥۰٫۴)؛ `isPerformanceModelSafe(...)` افزوده شد که هر دو را در core بررسی می‌کند (`isPerformanceBaseSafe` برای هشدار اختصاصی پایه باقی ماند). (۲) `deltaTraffic` با `zNonNeg` عمومی اعتبارسنجی شد (به‌جای نام گمراه‌کننده‌ی hours).
 
+## 2026-06-30 — Phase 2 (UI Foundations)
+
+- **react-router-dom ^7 با `createHashRouter`** — hash router زیر هر مسیر/ساب‌دامین و در حالت embed (iframe) بدون پیکربندی سرور کار می‌کند (architecture §۸). جایگزین: BrowserRouter+basename (پیچیده‌تر برای استاتیک/embed).
+- **zustand ^5 + persist** برای `appStore` (کلید `pricing:app:v1`، `version:1`). نگه‌داری: theme، activeRate (نرخ فعال مشترک)، welcomeTourDone، scenarios.
+- **تجمیع theme در appStore** (انحراف کنترل‌شده از phase 0): تنها منبع تم همان store است؛ هوک `useApplyTheme` کلاس `.dark` را sync می‌کند و اسکریپت pre-paint در `index.html` تم را از همان blob می‌خواند. هوک `use-theme.ts` فاز ۰ حذف شد.
+- **حذف `exactOptionalPropertyTypes`** از tsconfig.app (همچنان `strict:true` کامل). کامپوننت‌های shadcn (slider/sonner) با این فلگ سازگار نیستند و هر `shadcn add` آینده را می‌شکست. این فلگ جزو `strict` نیست؛ بقیه‌ی فلگ‌های سخت‌گیر (noUnchecked*, noUnused*, …) باقی ماندند.
+- **بازنویسی `sonner.tsx`**: حذف وابستگی `next-themes` (تم از کلاس `.dark` خوانده می‌شود) تا سیستم تم دوگانه نسازیم. پکیج `next-themes` حذف شد.
+- **اصلاح alias در `shadcn add`**: `@` در tsconfig ریشه (references-only) resolve نمی‌شد و فایل‌ها در پوشه‌ی literal `@/` نوشته شدند؛ فایل‌ها به `src/components/ui` منتقل و `compilerOptions.paths` به tsconfig ریشه افزوده شد.
+- **۱۷ کامپوننت shadcn** (tabs/accordion/select/slider/checkbox/switch/popover/dialog/sheet/badge/separator/sonner/table/skeleton/scroll-area/alert) + ۵ پایه‌ی فاز ۰. + `radix-ui`، `sonner`.
+- **`lib/format`**: `Intl.NumberFormat('fa-IR')` برای فرمت؛ parse دستی (`parsePersianNumber`) برای ورودی فارسی/عربی/لاتین با جداکننده‌ها. گرد‌کردن فقط در نمایش.
+- **لایه‌ی محتوا `content/fa`**: accessorهای تایپ‌شده `label()/message()/tooltip()` (i18n-ready). هیچ متن فارسی هارد‌کد در JSX.
+- **InfoTooltip**: desktop=Tooltip (hover/focus)، mobile (اشاره‌گر درشت)=Popover (tap) با هوک `useCoarsePointer`.
+- **بودجه‌ی باندل**: gzip اولیه ۱۶۵٫۶KB (زیر سقف ۱۷۰KB ولی نزدیک). chart.js/driver.js/PDF در فازهای بعد **باید** lazy/code-split شوند (فاز ۷). تست‌ها: ResizeObserver/matchMedia/PointerCapture در `tests/setup.ts` polyfill شدند.
+
 ### تصمیمات باز (طبق architecture §۱۳ — در فاز مربوطه قطعی می‌شوند)
 - روش PDF: شروع با چاپ مرورگر (`react-to-print`)، ارتقا به `html2canvas+jsPDF` در صورت نیاز (تصمیم نهایی: فاز ۶).
 - Waterfall: پیاده‌سازی دستی روی Bar چارت بدون پلاگین اضافه (حفظ سبکی باندل).
