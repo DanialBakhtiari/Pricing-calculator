@@ -2,11 +2,42 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import { VitePWA } from 'vite-plugin-pwa';
 import path from 'node:path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon-48.png', 'apple-touch-icon.png'],
+      manifest: {
+        name: 'ماشین‌حساب قیمت‌گذاری وب، وردپرس و سئو',
+        short_name: 'قیمت‌گذاری',
+        description:
+          'محاسبه‌ی قیمت قابل‌دفاع پروژه‌های وب، وردپرس و سئو — کلاینت‌ساید، فارسی و آفلاین.',
+        lang: 'fa',
+        dir: 'rtl',
+        theme_color: '#7c5cff',
+        background_color: '#ffffff',
+        display: 'standalone',
+        start_url: '.',
+        scope: '.',
+        icons: [
+          { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,woff2,png,svg,ico}'],
+        cleanupOutdatedCaches: true,
+      },
+      devOptions: { enabled: false },
+    }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),
