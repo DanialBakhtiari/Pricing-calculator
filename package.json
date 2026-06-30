@@ -4,6 +4,12 @@
   "private": true,
   "type": "module",
   "description": "ماشین‌حساب قیمت‌گذاری پروژه‌های وب، وردپرس و سئو — کلاینت‌ساید، فارسی RTL، PWA",
+  "author": "Danial Bakhtiari (https://danialbakhtiari.com)",
+  "homepage": "https://danialbakhtiari.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danialbakhtiari"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
