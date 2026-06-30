@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#7c5cff" />
+    <title>ماشین‌حساب قیمت‌گذاری وب، وردپرس و سئو</title>
+    <meta
+      name="description"
+      content="ابزار محاسبه‌ی قیمت قابل‌دفاع پروژه‌های وب، وردپرس و سئو — کلاینت‌ساید، فارسی و آفلاین."
+    />
+    <script>
+      // Set theme before paint to avoid flash of incorrect theme.
+      (function () {
+        try {
+          var stored = localStorage.getItem('pricing:theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var dark = stored ? stored === 'dark' : prefersDark;
+          document.documentElement.classList.toggle('dark', dark);
+        } catch (e) {
+          /* localStorage unavailable; ignore */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
