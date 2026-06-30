@@ -1,7 +1,6 @@
 import { useId, useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { parsePersianNumber, toPersianDigits } from '@/lib/format';
@@ -97,12 +96,21 @@ export function NumberField({
           <Minus aria-hidden />
         </Button>
 
-        <div className="relative flex-1">
-          <Input
+        {/* واحد (مثل «تومان») جزءِ flex است نه absolute، تا هرگز روی عدد نیفتد. */}
+        <div
+          className={cn(
+            'border-input dark:bg-input/30 focus-within:border-ring focus-within:ring-ring/50 flex h-11 flex-1 items-center rounded-md border bg-transparent shadow-xs transition-[color,box-shadow] focus-within:ring-[3px]',
+            error && 'border-destructive focus-within:ring-destructive/30',
+          )}
+        >
+          <input
             id={id}
             inputMode="decimal"
             dir="ltr"
-            className={cn('h-11 text-center tabular-nums', unit && 'pe-14')}
+            className={cn(
+              'h-full min-w-0 flex-1 bg-transparent px-3 text-sm tabular-nums outline-none',
+              unit ? 'text-end' : 'text-center',
+            )}
             value={display}
             placeholder={placeholder}
             aria-invalid={error ? true : undefined}
@@ -115,7 +123,7 @@ export function NumberField({
             onBlur={() => setEditing(false)}
           />
           {unit ? (
-            <span className="text-muted-foreground pointer-events-none absolute inset-y-0 end-3 flex items-center text-xs">
+            <span className="text-muted-foreground pointer-events-none shrink-0 ps-1 pe-3 text-xs">
               {unit}
             </span>
           ) : null}

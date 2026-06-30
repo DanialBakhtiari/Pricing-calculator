@@ -33,6 +33,11 @@ import {
 
 const TAB_IDS: SeoMode[] = ['retainer', 'performance', 'audit'];
 
+// تریگرِ تب: همه‌ی بک‌گراندهای active پیش‌فرض shadcn (روشن/تیره/حاشیه) خنثی می‌شوند
+// تا فقط «پیلِ برندِ لغزان» وضعیت فعال را نشان دهد.
+const TAB_TRIGGER_CLASS =
+  'relative z-10 min-h-11 text-foreground/70 transition-colors data-[state=active]:bg-transparent data-[state=active]:text-primary-foreground data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent dark:data-[state=active]:text-primary-foreground';
+
 const RoiChart = lazy(() => import('@/components/charts/RoiChart'));
 
 const META = MODULES.find((m) => m.id === 'seo');
@@ -125,32 +130,23 @@ export function SeoPage() {
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as SeoMode)} data-tour="seo-model">
         <TabsList className="relative grid h-auto w-full grid-cols-3 p-1">
-          {/* نشانگر فعالِ لغزان (RTL) */}
+          {/* پیلِ برندِ لغزان (RTL) — نشانگر تب فعال */}
           <span
             aria-hidden
-            className="bg-background absolute inset-y-1 rounded-md shadow-sm transition-transform duration-200 ease-out"
+            className="bg-primary absolute inset-y-1 rounded-md shadow-sm transition-transform duration-200 ease-out"
             style={{
               width: 'calc((100% - 0.5rem) / 3)',
               insetInlineStart: '0.25rem',
               transform: `translateX(calc(${activeIndex} * -100%))`,
             }}
           />
-          <TabsTrigger
-            value="retainer"
-            className="relative z-10 min-h-11 bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-          >
+          <TabsTrigger value="retainer" className={TAB_TRIGGER_CLASS}>
             {label('seo.tabRetainer')}
           </TabsTrigger>
-          <TabsTrigger
-            value="performance"
-            className="relative z-10 min-h-11 bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-          >
+          <TabsTrigger value="performance" className={TAB_TRIGGER_CLASS}>
             {label('seo.tabPerformance')}
           </TabsTrigger>
-          <TabsTrigger
-            value="audit"
-            className="relative z-10 min-h-11 bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none"
-          >
+          <TabsTrigger value="audit" className={TAB_TRIGGER_CLASS}>
             {label('seo.tabAudit')}
           </TabsTrigger>
         </TabsList>
