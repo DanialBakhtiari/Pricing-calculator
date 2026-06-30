@@ -42,6 +42,19 @@
 - **InfoTooltip**: desktop=Tooltip (hover/focus)، mobile (اشاره‌گر درشت)=Popover (tap) با هوک `useCoarsePointer`.
 - **بودجه‌ی باندل**: gzip اولیه ۱۶۵٫۶KB (زیر سقف ۱۷۰KB ولی نزدیک). chart.js/driver.js/PDF در فازهای بعد **باید** lazy/code-split شوند (فاز ۷). تست‌ها: ResizeObserver/matchMedia/PointerCapture در `tests/setup.ts` polyfill شدند.
 
+## 2026-06-30 — Phase 3 (MAR Module)
+
+- **chart.js ^4 + react-chartjs-2 ^5** — `CostDoughnut`. هر چارت فقط المان‌های لازم را register می‌کند (tree-shake: ArcElement/Tooltip/Legend). چارت‌ها lazy (`React.lazy` + `Suspense`) ⇒ chart.js (~۵۵KB gz) از باندل اولیه جداست.
+- **driver.js ^1** — تور آموزشی؛ lazy (driver.js + css فقط هنگام کلیک «راهنما» لود می‌شوند، ~۶KB gz جدا).
+- **react-hook-form ^7 + @hookform/resolvers ^5** — فرم با `Controller` (پل به فیلدهای کنترل‌شده‌ی فارسی) + `zodResolver`. از `useWatch({control})` به‌جای `watch()` استفاده شد (سازگار با react-hooks/React-Compiler lint).
+- **`lib/forms/zodField.ts`**: helper `numberFieldSchema` — ورودی number|null؛ `z.preprocess(v => v ?? NaN, ...)` تا null/خالی پیام «عدد معتبر» بدهد و دامنه پیام «خارج از بازه». پیام‌ها از content/fa.
+- **محک نسبت سربار** (spec §1.3): ۰–۸۰٪ سبز، ۸۰–۱۰۰٪ زرد، >۱۰۰٪ قرمز. مقادیر مثال پیش‌فرض فرم تا حالت empty یک نتیجه‌ی واقعی نشان دهد.
+- **تزریق نرخ فعال**: وقتی MAR معتبر شد، `appStore.setActiveRate(mar)` (useEffect با dep مقدار اولیه‌ی mar) ⇒ ماژول ۲/۴ از آن استفاده می‌کنند.
+- **رنگ چارت از CSS variables (OKLCH)** با `getComputedStyle` خوانده می‌شود (`chartTheme.cssVar`) تا تم روشن/تیره را دنبال کند. لجند/تول‌تیپ RTL + فونت Vazirmatn.
+- **Route-level code-splitting**: صفحات سنگین (MarPage/Playground) lazy شدند ⇒ باندل اولیه از ۱۸۱ به **۱۴۹KB gz** رسید (زیر سقف ۱۷۰، architecture §11). MarPage chunk (RHF/zod) ~۱۴KB gz جدا.
+- **پوشش**: `src/lib/onboarding/**` (glue مرورگری driver.js) از coverage مستثنا شد. بقیه‌ی lib همچنان ۱۰۰٪. `computeMarResult` (در features، خالص) با Test Vector تست شد.
+- **`react-refresh/only-export-components`** برای `src/app/router.tsx` غیرفعال شد (فایل پیکربندی router، نه ماژول کامپوننت؛ lazyها عمدی این‌جا هستند).
+
 ### تصمیمات باز (طبق architecture §۱۳ — در فاز مربوطه قطعی می‌شوند)
 - روش PDF: شروع با چاپ مرورگر (`react-to-print`)، ارتقا به `html2canvas+jsPDF` در صورت نیاز (تصمیم نهایی: فاز ۶).
 - Waterfall: پیاده‌سازی دستی روی Bar چارت بدون پلاگین اضافه (حفظ سبکی باندل).

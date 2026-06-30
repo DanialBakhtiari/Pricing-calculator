@@ -9,7 +9,7 @@
 | ۰ | اسکلت و ابزار (Scaffold) | ✅ | typecheck/lint/test/build سبز، dev بالا، bundle 72.5KB gz |
 | ۱ | هسته‌ی موتور قیمت‌گذاری | ✅ | ۵۹ تست، پوشش lib/pricing ۱۰۰٪، همه Test Vectorها سبز، راستی‌آزمایی ۶-عاملی |
 | ۲ | کمکی‌ها و پایه‌های UI | ✅ | ۸۸ تست، format/content/store/۸ کامپوننت/router/داشبورد، راستی‌آزمایی ۲-عاملی |
-| ۳ | ماژول MAR | ⬜ | — |
+| ۳ | ماژول MAR | ✅ | فرم+نتیجه+CostDoughnut+سناریو+tour، ۹۸ تست، نرخ فعال تزریق، باندل ۱۴۹KB gz |
 | ۴ | ماژول وب/وردپرس | ⬜ | — |
 | ۵ | ماژول سئو/ROI + آژانس | ⬜ | — |
 | ۶ | قابلیت‌های فرابخشی (PDF/سناریو/embed) | ⬜ | — |
@@ -51,3 +51,16 @@
 **راستی‌آزمایی مستقل (۲ reviewer):** ۷ یافته؛ ۶ اعمال شد — unit پیش‌فرض MoneyField/PercentField از content؛ هدف لمس stepperها ۳۶→۴۴px؛ حذف `role="tooltip"` ناقص؛ aria-labelledby اسلایدر؛ Label متصل (sr-only) در ScenarioBar. ۱ رد شد (حذف `dir="rtl"` اسلایدر — Radix dir سند را ارث نمی‌برد؛ حذف، جهت RTL را می‌شکست).
 
 **ریسک باقی‌مانده:** باندل اولیه ۱۶۵٫۶KB gz (نزدیک سقف ۱۷۰)؛ chart.js/driver.js/PDF فازهای بعد باید lazy شوند. هدف لمس آیکن «!» (size-5) در فاز ۷ (axe/Lighthouse) بازبینی شود.
+
+### فاز ۳ — ماژول MAR (✅ تمام — 2026-06-30)
+معیار پذیرش: اعداد با Test Vector؛ نمودار درست؛ «نرخ فعال»=MAR در appStore؛ empty/invalid/success؛ tour ماژول کار کند.
+
+**چه ساختم:** `features/mar/{marForm,MarPage}` — فرم RHF+zodResolver (Controller روی MoneyField/NumberField/SliderField)، نتیجه‌ی زنده از `computeMarResult` (فقط موتور فاز ۱ را صدا می‌زند). نتایج: MAR (بزرگ)، ساعت قابل‌فاکتور، کل هزینه، نسبت سربار با BenchmarkBar. `components/charts/{ChartBase,CostDoughnut,chartTheme}` — دونات lazy با رنگ از CSS-var/OKLCH، role=img + جدول متنی (thead/tbody) + دانلود PNG. `lib/onboarding/runTour` — تور driver.js lazy، RTL. ScenarioBar متصل. نرخ MAR به appStore تزریق می‌شود.
+
+**تست‌های سبز:** ۹۸ تست؛ `computeMarResult` با Test Vector (MAR=۳۸۴٬۶۱۵)، MarPage (رندر + ست‌شدن activeRate)، `numberFieldSchema`. پوشش lib ۱۰۰٪ (همه‌ی متریک‌ها). `typecheck/lint/format/build` سبز.
+
+**راستی‌آزمایی مستقل (۱ reviewer):** ۲ یافته — (۱) محک سربار <۴۰٪ سبز: رد شد با استدلال (سند فقط سربار بالا را ریسک می‌داند؛ ابداع رنگ برای <۴۰٪ ممنوع)، کامنت توضیحی افزوده شد. (۲) thead برای جدول نمودار: اعمال شد.
+
+**بهینه‌سازی:** route-level code-splitting ⇒ باندل اولیه ۱۸۱→۱۴۹KB gz (زیر سقف ۱۷۰). chart.js/driver.js/MarPage همه lazy chunk.
+
+**ریسک باقی‌مانده:** رنگ oklch در canvas نیاز مرورگر مدرن دارد (۲۰۲۶ اوکی). تور driver.js در فاز ۶ (تور خوش‌آمد) و ۷ (axe) صیقل بخورد.

@@ -163,3 +163,9 @@
     }
   }
 }
+
+/* ---------- driver.js tour — RTL + فونت فارسی ---------- */
+.driverjs-rtl {
+  direction: rtl;
+  font-family: var(--font-sans);
+}

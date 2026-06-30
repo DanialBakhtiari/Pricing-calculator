@@ -16,6 +16,9 @@ export const labels = {
   'nav.dashboard': 'داشبورد',
   'nav.back': 'بازگشت به داشبورد',
 
+  'table.item': 'مورد',
+  'table.value': 'مقدار',
+
   'breakdown.base': 'قیمت پایه',
   'breakdown.cm': 'ضریب پیچیدگی',
   'breakdown.rb': 'بافر ریسک',
@@ -28,11 +31,16 @@ export const labels = {
   'theme.toLight': 'روشن کردن تم',
   'theme.toDark': 'تیره کردن تم',
 
+  'tour.next': 'بعدی',
+  'tour.prev': 'قبلی',
+  'tour.done': 'پایان',
+
   'state.empty': 'برای دیدن نتیجه، فرم را پر کنید — یا یک مثال را امتحان کنید.',
   'state.invalid': 'ورودی نامعتبر است؛ نتیجه قابل‌محاسبه نیست.',
 
   'unit.toman': 'تومان',
   'unit.hours': 'ساعت',
+  'unit.week': 'هفته',
   'unit.perMonth': 'در ماه',
   'unit.percent': '٪',
 
@@ -46,6 +54,24 @@ export const labels = {
   'scenario.restore': 'بازیابی',
   'scenario.empty': 'هنوز سناریویی ذخیره نشده است.',
   'scenario.titlePrefix': 'سناریوی',
+
+  'mar.costsGroup': 'هزینه‌های سالانه',
+  'mar.capacityGroup': 'ظرفیت کاری',
+  'mar.direct': 'هزینه‌های مستقیم سالانه',
+  'mar.overhead': 'سربار سالانه',
+  'mar.profit': 'هدف سود خالص',
+  'mar.weeks': 'هفته‌های کاری در سال',
+  'mar.hoursPerWeek': 'ساعت کاری در هفته',
+  'mar.utilization': 'نرخ بهره‌وری',
+  'mar.billable': 'ساعت قابل‌فاکتور سالانه',
+  'mar.total': 'کل هزینه‌ی سالانه',
+  'mar.result': 'حداقل نرخ قابل‌قبول (MAR)',
+  'mar.resultHint': 'کف مطلق نرخ ساعتی شما؛ زیر این عدد ضرر می‌کنید.',
+  'mar.overheadRatio': 'نسبت سربار',
+  'mar.chartTitle': 'ترکیب هزینه‌ها',
+  'mar.activeRateSet': 'این MAR به‌عنوان نرخ فعال ذخیره شد و در ماژول‌های بعدی پیشنهاد می‌شود.',
+  'mar.overheadNA': 'برای محاسبه‌ی نسبت سربار، هزینه‌ی مستقیم باید بزرگ‌تر از صفر باشد.',
+  'unit.hoursPerYear': 'ساعت در سال',
 
   'playground.title': 'نمونه‌ی کامپوننت‌ها',
   'playground.description':

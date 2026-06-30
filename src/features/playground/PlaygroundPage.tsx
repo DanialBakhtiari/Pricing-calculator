@@ -3,6 +3,7 @@ import { adjustedPrice, RANGES } from '@/lib/pricing';
 import { formatToman, toPersianDigits } from '@/lib/format';
 import { Card, CardContent } from '@/components/ui/card';
 import {
+  BENCHMARK_STATUS_LABELS,
   BenchmarkBar,
   ModuleHeader,
   MoneyField,
@@ -11,19 +12,13 @@ import {
   SliderField,
   type BenchmarkSegment,
 } from '@/components/common';
-import { label, labels, tooltip } from '@/content/fa';
+import { label, tooltip } from '@/content/fa';
 
 const CM_SEGMENTS: BenchmarkSegment[] = [
   { from: 1.0, to: 1.5, status: 'healthy' },
   { from: 1.5, to: 2.0, status: 'warning' },
   { from: 2.0, to: 2.5001, status: 'danger' },
 ];
-
-const BENCHMARK_LABELS = {
-  healthy: labels['benchmark.healthy'],
-  warning: labels['benchmark.warning'],
-  danger: labels['benchmark.danger'],
-};
 
 /** صفحه‌ی نمونه — اثبات کارکرد کامپوننت‌های مشترک با موتور قیمت‌گذاری. */
 export function PlaygroundPage() {
@@ -98,7 +93,7 @@ export function PlaygroundPage() {
                 min={RANGES.cm.min}
                 max={RANGES.cm.max}
                 segments={CM_SEGMENTS}
-                statusLabel={BENCHMARK_LABELS}
+                statusLabel={BENCHMARK_STATUS_LABELS}
                 formatValue={(v) => `${toPersianDigits(v.toFixed(1))}×`}
               />
             </CardContent>

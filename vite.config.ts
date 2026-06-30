@@ -22,6 +22,8 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'text-summary', 'html'],
       include: ['src/lib/**'],
+      // glueهای مرورگری/lazy (driver.js) که تست واحد ندارند.
+      exclude: ['src/lib/onboarding/**'],
       thresholds: {
         // architecture §10/§11: lib کلی ≥ ۹۰٪، موتور قیمت‌گذاری = ۱۰۰٪ خطوط.
         lines: 90,

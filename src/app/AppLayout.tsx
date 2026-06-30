@@ -1,6 +1,8 @@
+import { Suspense } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useAppStore } from '@/lib/storage/appStore';
@@ -33,7 +35,16 @@ export function AppLayout() {
         </header>
 
         <main className="mx-auto max-w-5xl px-4 py-8">
-          <Outlet />
+          <Suspense
+            fallback={
+              <div className="space-y-4">
+                <Skeleton className="h-8 w-48" />
+                <Skeleton className="h-64 w-full" />
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </main>
 
         <Toaster />
