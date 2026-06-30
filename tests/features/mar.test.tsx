@@ -54,7 +54,7 @@ describe('MarPage', () => {
     );
 
     // 480,000,000 / 1248 ≈ 384,615 → فرمت تومان (گرد‌شده در نمایش)
-    expect(await screen.findByText('۳۸۴٬۶۱۵ تومان')).toBeInTheDocument();
+    expect((await screen.findAllByText('۳۸۴٬۶۱۵ تومان')).length).toBeGreaterThan(0);
     expect(useAppStore.getState().activeRate).toBeCloseTo(384_615.3846, 3);
   });
 });

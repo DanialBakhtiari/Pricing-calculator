@@ -9,5 +9,6 @@ export * from './ModuleHeader';
 export * from './ScenarioBar';
 export * from './TierCards';
 export * from './SummaryRow';
+export * from './ProposalSheet';
 export * from './form-fields';
 export * from './benchmark';

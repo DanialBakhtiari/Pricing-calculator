@@ -19,6 +19,12 @@ export const labels = {
   'table.item': 'مورد',
   'table.value': 'مقدار',
 
+  'proposal.title': 'پروپوزال قیمت',
+  'proposal.date': 'تاریخ',
+  'proposal.generatedBy': 'تولیدشده با ماشین‌حساب قیمت‌گذاری وب، وردپرس و سئو',
+  'proposal.inputs': 'ورودی‌ها',
+  'proposal.results': 'نتایج',
+
   'breakdown.base': 'قیمت پایه',
   'breakdown.cm': 'ضریب پیچیدگی',
   'breakdown.rb': 'بافر ریسک',

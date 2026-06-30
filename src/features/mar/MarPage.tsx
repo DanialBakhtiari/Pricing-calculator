@@ -1,6 +1,7 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { useForm, useWatch, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useReactToPrint } from 'react-to-print';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -11,6 +12,7 @@ import {
   FormSlider,
   InfoTooltip,
   ModuleHeader,
+  ProposalSheet,
   ScenarioBar,
   SummaryRow,
 } from '@/components/common';
@@ -47,12 +49,48 @@ export function MarPage() {
     if (mar !== null) setActiveRate(mar);
   }, [mar, setActiveRate]);
 
+  const proposalRef = useRef<HTMLDivElement>(null);
+  const printProposal = useReactToPrint({ contentRef: proposalRef });
+
+  const proposalSections = result
+    ? [
+        {
+          title: label('proposal.inputs'),
+          rows: [
+            { label: label('mar.direct'), value: formatToman(values.direct ?? 0) },
+            { label: label('mar.overhead'), value: formatToman(values.overhead ?? 0) },
+            { label: label('mar.profit'), value: formatToman(values.profitTarget ?? 0) },
+            { label: label('mar.weeks'), value: toPersianDigits(values.weeks ?? 0) },
+            { label: label('mar.hoursPerWeek'), value: toPersianDigits(values.hoursPerWeek ?? 0) },
+            {
+              label: label('mar.utilization'),
+              value: toPersianDigits((values.utilization ?? 0).toFixed(2)),
+            },
+          ],
+        },
+        {
+          title: label('proposal.results'),
+          rows: [
+            {
+              label: label('mar.billable'),
+              value: `${toPersianDigits(Math.round(result.billable))} ${label('unit.hoursPerYear')}`,
+            },
+            { label: label('mar.total'), value: formatToman(result.total) },
+            ...(result.overheadRatio !== null
+              ? [{ label: label('mar.overheadRatio'), value: formatPercent(result.overheadRatio) }]
+              : []),
+          ],
+        },
+      ]
+    : [];
+
   return (
     <div className="space-y-6">
       <ModuleHeader
         title={META?.name ?? ''}
         description={META?.description}
         onHelp={() => void startModuleTour('mar')}
+        onExportPdf={result ? () => printProposal() : undefined}
       />
 
       <div className="grid gap-6 lg:grid-cols-5">
@@ -207,6 +245,17 @@ export function MarPage() {
       ) : null}
 
       <ScenarioBar module="mar" inputs={values} onRestore={(inputs) => reset(inputs)} />
+
+      <div className="hidden">
+        {result ? (
+          <ProposalSheet
+            ref={proposalRef}
+            moduleTitle={META?.name ?? ''}
+            hero={{ label: label('mar.result'), value: formatToman(result.mar) }}
+            sections={proposalSections}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

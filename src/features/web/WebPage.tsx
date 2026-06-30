@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useRef } from 'react';
 import { Controller, useForm, useWatch, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useReactToPrint } from 'react-to-print';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -19,6 +20,7 @@ import {
   ModuleHeader,
   MoneyField,
   NumberField,
+  ProposalSheet,
   ScenarioBar,
   SliderField,
   SummaryRow,
@@ -65,12 +67,50 @@ export function WebPage() {
     };
   });
 
+  const proposalRef = useRef<HTMLDivElement>(null);
+  const printProposal = useReactToPrint({ contentRef: proposalRef });
+
+  const proposalSections = result
+    ? [
+        {
+          title: label('proposal.results'),
+          rows: [
+            { label: label('breakdown.base'), value: formatToman(result.proposal.base) },
+            {
+              label: `+ ${label('breakdown.cm')}`,
+              value: formatToman(result.proposal.afterCM - result.proposal.base),
+            },
+            {
+              label: `+ ${label('breakdown.rb')}`,
+              value: formatToman(result.proposal.afterRB - result.proposal.afterCM),
+            },
+            { label: label('web.finalPrice'), value: formatToman(result.proposal.final) },
+            ...(result.maintenance
+              ? [{ label: label('web.maintenanceLine'), value: moneyRangeText(result.maintenance) }]
+              : []),
+            ...(result.performance
+              ? [{ label: label('web.performanceLine'), value: moneyRangeText(result.performance) }]
+              : []),
+            { label: label('web.grandTotal'), value: moneyRangeText(result.grandTotal) },
+          ],
+        },
+      ]
+    : [];
+
+  const proposalTiers = tierCards.map((t) => ({
+    name: t.name,
+    price: formatToman(t.price),
+    recommended: t.recommended,
+    features: t.features,
+  }));
+
   return (
     <div className="space-y-6">
       <ModuleHeader
         title={META?.name ?? ''}
         description={META?.description}
         onHelp={() => void startModuleTour('web')}
+        onExportPdf={result ? () => printProposal() : undefined}
       />
 
       <div className="grid gap-6 lg:grid-cols-5">
@@ -457,6 +497,18 @@ export function WebPage() {
       ) : null}
 
       <ScenarioBar module="web" inputs={values} onRestore={(inputs) => reset(inputs)} />
+
+      <div className="hidden">
+        {result ? (
+          <ProposalSheet
+            ref={proposalRef}
+            moduleTitle={META?.name ?? ''}
+            hero={{ label: label('web.finalPrice'), value: formatToman(result.proposal.final) }}
+            sections={proposalSections}
+            tiers={proposalTiers}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

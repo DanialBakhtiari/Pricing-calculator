@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useRef } from 'react';
 import { Controller, useFieldArray, useForm, useWatch, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useReactToPrint } from 'react-to-print';
 import { Plus, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -15,6 +16,7 @@ import {
   FormSlider,
   InfoTooltip,
   ModuleHeader,
+  ProposalSheet,
   ScenarioBar,
   SummaryRow,
 } from '@/components/common';
@@ -58,12 +60,41 @@ export function AgencyPage() {
     value: l.hours * l.rate,
   }));
 
+  const proposalRef = useRef<HTMLDivElement>(null);
+  const printProposal = useReactToPrint({ contentRef: proposalRef });
+  const hasProposal = blended !== null || asf !== null;
+
+  const proposalSections = [
+    {
+      title: label('proposal.results'),
+      rows: [
+        ...(asf !== null
+          ? [{ label: label('agency.asf'), value: `${toPersianDigits(asf.toFixed(2))}×` }]
+          : []),
+        ...(rate !== null ? [{ label: label('agency.agencyRate'), value: formatToman(rate) }] : []),
+        ...(blended !== null
+          ? [{ label: label('agency.blended'), value: formatToman(blended) }]
+          : []),
+        ...(margin ? [{ label: label('agency.margin'), value: formatPercent(margin.margin) }] : []),
+      ],
+    },
+    ...(roleShares.length > 0
+      ? [
+          {
+            title: label('agency.rolesGroup'),
+            rows: roleShares.map((r) => ({ label: r.label, value: formatToman(r.value) })),
+          },
+        ]
+      : []),
+  ];
+
   return (
     <div className="space-y-6">
       <ModuleHeader
         title={META?.name ?? ''}
         description={META?.description}
         onHelp={() => void startModuleTour('agency')}
+        onExportPdf={hasProposal ? () => printProposal() : undefined}
       />
 
       <div className="grid gap-6 lg:grid-cols-5">
@@ -283,6 +314,20 @@ export function AgencyPage() {
       ) : null}
 
       <ScenarioBar module="agency" inputs={values} onRestore={(inputs) => reset(inputs)} />
+
+      <div className="hidden">
+        {hasProposal ? (
+          <ProposalSheet
+            ref={proposalRef}
+            moduleTitle={META?.name ?? ''}
+            hero={{
+              label: label('agency.blended'),
+              value: blended !== null ? formatToman(blended) : '—',
+            }}
+            sections={proposalSections}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

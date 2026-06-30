@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useRef } from 'react';
 import { Controller, useForm, useWatch, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useReactToPrint } from 'react-to-print';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -11,6 +12,7 @@ import {
   FormNumber,
   FormPercent,
   ModuleHeader,
+  ProposalSheet,
   ScenarioBar,
   SummaryRow,
 } from '@/components/common';
@@ -56,12 +58,60 @@ export function SeoPage() {
   const roi = computeRoi(values);
   const dash = '—';
 
+  const proposalRef = useRef<HTMLDivElement>(null);
+  const printProposal = useReactToPrint({ contentRef: proposalRef });
+  const hasProposal = retainer !== null || roi !== null;
+
+  const proposalSections = [
+    ...(retainer !== null
+      ? [
+          {
+            title: label('seo.modeRetainer'),
+            rows: [
+              { label: label('seo.retainerResult'), value: formatToman(retainer) },
+              { label: label('seo.annual'), value: formatToman(retainer * 12) },
+            ],
+          },
+        ]
+      : []),
+    ...(performance
+      ? [
+          {
+            title: label('seo.modePerformance'),
+            rows: [
+              { label: label('seo.performanceResult'), value: formatToman(performance.payment) },
+            ],
+          },
+        ]
+      : []),
+    ...(audit
+      ? [
+          {
+            title: label('seo.modeAudit'),
+            rows: [{ label: label('seo.auditPrice'), value: formatToman(audit.price) }],
+          },
+        ]
+      : []),
+    ...(roi
+      ? [
+          {
+            title: label('seo.roiGroup'),
+            rows: [
+              { label: label('seo.monthlyValue'), value: formatToman(roi.vMonthly) },
+              { label: label('seo.roiResult'), value: formatPercent(roi.roi) },
+            ],
+          },
+        ]
+      : []),
+  ];
+
   return (
     <div className="space-y-6">
       <ModuleHeader
         title={META?.name ?? ''}
         description={META?.description}
         onHelp={() => void startModuleTour('seo')}
+        onExportPdf={hasProposal ? () => printProposal() : undefined}
       />
 
       <Tabs defaultValue="retainer" data-tour="seo-model">
@@ -372,6 +422,24 @@ export function SeoPage() {
       </Card>
 
       <ScenarioBar module="seo" inputs={values} onRestore={(inputs) => reset(inputs)} />
+
+      <div className="hidden">
+        {hasProposal ? (
+          <ProposalSheet
+            ref={proposalRef}
+            moduleTitle={META?.name ?? ''}
+            hero={
+              roi
+                ? { label: label('seo.roiResult'), value: formatPercent(roi.roi) }
+                : {
+                    label: label('seo.retainerResult'),
+                    value: retainer !== null ? formatToman(retainer) : dash,
+                  }
+            }
+            sections={proposalSections}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

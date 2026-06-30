@@ -93,8 +93,8 @@ describe('WebPage', () => {
     );
     // WEB_DEFAULTS: 150M base × 1.8 × (1 + 0.35) = 364,500,000
     expect((await screen.findAllByText('۳۶۴٬۵۰۰٬۰۰۰ تومان')).length).toBeGreaterThan(0);
-    expect(screen.getByText('سه سطح پیشنهادی')).toBeInTheDocument();
-    expect(screen.getByText('پیشنهادی')).toBeInTheDocument();
+    expect(screen.getAllByText('سه سطح پیشنهادی').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('پیشنهادی').length).toBeGreaterThan(0);
   });
 
   it('default scope matches the expected base hours', () => {

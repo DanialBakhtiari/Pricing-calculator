@@ -11,7 +11,7 @@ describe('App shell (dashboard + theme)', () => {
     useAppStore.setState({
       theme: 'light',
       activeRate: null,
-      welcomeTourDone: false,
+      welcomeTourDone: true, // skip the first-visit driver.js tour in tests
       scenarios: [],
     });
   });

@@ -53,7 +53,7 @@ describe('SeoPage', () => {
         <SeoPage />
       </MemoryRouter>,
     );
-    expect(await screen.findByText('۱۰٬۰۰۰٬۰۰۰ تومان')).toBeInTheDocument(); // retainer
-    expect(screen.getByText('۱۴۰٪')).toBeInTheDocument(); // ROI
+    expect((await screen.findAllByText('۱۰٬۰۰۰٬۰۰۰ تومان')).length).toBeGreaterThan(0); // retainer
+    expect(screen.getAllByText('۱۴۰٪').length).toBeGreaterThan(0); // ROI
   });
 });
