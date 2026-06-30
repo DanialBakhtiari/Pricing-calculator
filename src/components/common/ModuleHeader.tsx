@@ -24,7 +24,7 @@ export function ModuleHeader({
   return (
     <div className="flex flex-col gap-3 border-b pb-4 md:flex-row md:items-start md:justify-between">
       <div className="space-y-1">
-        <Button asChild variant="ghost" size="sm" className="text-muted-foreground -ms-2">
+        <Button asChild variant="ghost" size="sm" className="text-muted-foreground -ms-2 h-11">
           <Link to="/">
             {/* فلش بازگشت در RTL آینه می‌شود */}
             <ArrowRight aria-hidden className="rtl:-scale-x-100" />
@@ -37,25 +37,31 @@ export function ModuleHeader({
 
       <div className="flex flex-wrap items-center gap-2">
         {onHelp ? (
-          <Button type="button" variant="outline" size="sm" onClick={onHelp}>
+          <Button type="button" variant="outline" size="sm" className="h-11" onClick={onHelp}>
             <HelpCircle aria-hidden />
             {label('action.help')}
           </Button>
         ) : null}
         {onSave ? (
-          <Button type="button" variant="outline" size="sm" onClick={onSave}>
+          <Button type="button" variant="outline" size="sm" className="h-11" onClick={onSave}>
             <Save aria-hidden />
             {label('action.save')}
           </Button>
         ) : null}
         {onExportPdf ? (
-          <Button type="button" variant="outline" size="sm" onClick={onExportPdf}>
+          <Button type="button" variant="outline" size="sm" className="h-11" onClick={onExportPdf}>
             <FileDown aria-hidden />
             {label('action.exportPdf')}
           </Button>
         ) : null}
         {onDownloadImage ? (
-          <Button type="button" variant="outline" size="sm" onClick={onDownloadImage}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-11"
+            onClick={onDownloadImage}
+          >
             <Download aria-hidden />
             {label('action.downloadImage')}
           </Button>

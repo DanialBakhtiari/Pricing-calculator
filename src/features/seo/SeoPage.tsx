@@ -116,13 +116,13 @@ export function SeoPage() {
 
       <Tabs defaultValue="retainer" data-tour="seo-model">
         <TabsList className="h-auto w-full flex-wrap">
-          <TabsTrigger value="retainer" className="whitespace-normal">
+          <TabsTrigger value="retainer" className="min-h-11 flex-1 py-2 whitespace-normal">
             {label('seo.modeRetainer')}
           </TabsTrigger>
-          <TabsTrigger value="performance" className="whitespace-normal">
+          <TabsTrigger value="performance" className="min-h-11 flex-1 py-2 whitespace-normal">
             {label('seo.modePerformance')}
           </TabsTrigger>
-          <TabsTrigger value="audit" className="whitespace-normal">
+          <TabsTrigger value="audit" className="min-h-11 flex-1 py-2 whitespace-normal">
             {label('seo.modeAudit')}
           </TabsTrigger>
         </TabsList>
@@ -175,7 +175,7 @@ export function SeoPage() {
             </Card>
 
             <div className="lg:col-span-2">
-              <Card className="lg:sticky lg:top-20">
+              <Card className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto">
                 <SummaryHero
                   title={label('seo.retainerResult')}
                   value={retainer !== null ? formatToman(retainer) : dash}
@@ -231,7 +231,7 @@ export function SeoPage() {
             </Card>
 
             <div className="space-y-4 lg:col-span-2">
-              <Card className="lg:sticky lg:top-20">
+              <Card className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto">
                 <SummaryHero
                   title={label('seo.performanceResult')}
                   value={performance ? formatToman(performance.payment) : dash}
@@ -282,7 +282,7 @@ export function SeoPage() {
                         return (
                           <label
                             key={c.id}
-                            className="flex cursor-pointer items-center gap-2 py-1 text-sm"
+                            className="flex min-h-11 cursor-pointer items-center gap-2 py-2 text-sm"
                           >
                             <Checkbox
                               checked={checked}
@@ -305,7 +305,7 @@ export function SeoPage() {
             </Card>
 
             <div className="lg:col-span-2">
-              <Card className="lg:sticky lg:top-20">
+              <Card className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto">
                 <SummaryHero
                   title={label('seo.auditPrice')}
                   value={audit ? formatToman(audit.price) : dash}

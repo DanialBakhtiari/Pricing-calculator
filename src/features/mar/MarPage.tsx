@@ -165,7 +165,10 @@ export function MarPage() {
         {/* ───── خلاصه‌ی زنده (۲/۵) ───── */}
         <div className="lg:col-span-2">
           {result ? (
-            <Card className="lg:sticky lg:top-20" data-tour="mar-result">
+            <Card
+              className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto"
+              data-tour="mar-result"
+            >
               <CardHeader>
                 <CardTitle className="text-muted-foreground flex items-center gap-1.5 text-sm font-normal">
                   {label('mar.result')}

@@ -246,7 +246,7 @@ export function AgencyPage() {
 
         {/* ───── خلاصه‌ی زنده (۲/۵) ───── */}
         <div className="lg:col-span-2">
-          <Card className="lg:sticky lg:top-20">
+          <Card className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto">
             <CardHeader>
               <CardTitle className="text-muted-foreground flex items-center gap-1.5 text-sm font-normal">
                 {label('agency.blended')}

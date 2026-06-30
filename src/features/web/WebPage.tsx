@@ -256,7 +256,7 @@ export function WebPage() {
                       return (
                         <label
                           key={f.id}
-                          className="flex cursor-pointer items-center gap-2 py-1 text-sm"
+                          className="flex min-h-11 cursor-pointer items-center gap-2 py-2 text-sm"
                         >
                           <Checkbox
                             checked={checked}
@@ -359,7 +359,7 @@ export function WebPage() {
         {/* ───── خلاصه‌ی زنده (۲/۵) ───── */}
         <div className="lg:col-span-2">
           {result ? (
-            <Card className="lg:sticky lg:top-20">
+            <Card className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto">
               <CardHeader>
                 <CardTitle className="text-base">{label('web.summaryTitle')}</CardTitle>
               </CardHeader>
