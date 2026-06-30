@@ -18,8 +18,8 @@ import {
 } from '@/components/common';
 import { formatPercent, formatToman, toPersianDigits } from '@/lib/format';
 import { startModuleTour } from '@/lib/onboarding/runTour';
-import { AUDIT_COMPONENTS } from '@/data';
-import { MODULES, label, message, tooltip } from '@/content/fa';
+import { AUDIT_COMPONENTS, pickLabel } from '@/data';
+import { label, message, moduleText, tooltip } from '@/content/fa';
 import {
   SEO_DEFAULTS,
   computeAudit,
@@ -36,7 +36,7 @@ const TAB_TRIGGER_CLASS =
 
 const RoiChart = lazy(() => import('@/components/charts/RoiChart'));
 
-const META = MODULES.find((m) => m.id === 'seo');
+const moduleMeta = () => moduleText('seo');
 
 /** کارت قهرمانِ خلاصه — عنوان + عدد بزرگ. */
 function SummaryHero({ title, value }: { title: string; value: string }) {
@@ -114,8 +114,8 @@ export function SeoPage() {
   return (
     <div className="space-y-6">
       <ModuleHeader
-        title={META?.name ?? ''}
-        description={META?.description}
+        title={moduleMeta().name}
+        description={moduleMeta().description}
         guide="seo"
         onHelp={() => void startModuleTour('seo')}
         onExportPdf={hasProposal ? () => printProposal() : undefined}
@@ -301,7 +301,7 @@ export function SeoPage() {
                                 )
                               }
                             />
-                            <span>{c.label}</span>
+                            <span>{pickLabel(c)}</span>
                           </label>
                         );
                       })}
@@ -434,7 +434,7 @@ export function SeoPage() {
         {hasProposal ? (
           <ProposalSheet
             ref={proposalRef}
-            moduleTitle={META?.name ?? ''}
+            moduleTitle={moduleMeta().name}
             hero={
               roi
                 ? { label: label('seo.roiResult'), value: formatPercent(roi.roi) }

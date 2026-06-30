@@ -10,6 +10,12 @@
   --radius: 0.75rem;
 }
 
+/* انگلیسی: فونت سیستمیِ لاتین (بدون افزودن asset). فارسی: Vazirmatn. */
+html:lang(en) {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
 /* ---------- Brand color tokens (OKLCH) — design §2 ---------- */
 :root {
   --radius: 0.75rem;

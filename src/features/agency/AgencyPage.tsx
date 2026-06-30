@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  BENCHMARK_STATUS_LABELS,
+  benchmarkStatusLabels,
   BenchmarkBar,
   FormMoney,
   FormSlider,
@@ -23,9 +23,9 @@ import {
 import { RANGES } from '@/lib/pricing';
 import { formatPercent, formatToman, parsePersianNumber, toPersianDigits } from '@/lib/format';
 import { startModuleTour } from '@/lib/onboarding/runTour';
-import { MODULES, label, message, tooltip } from '@/content/fa';
+import { label, message, moduleText, tooltip } from '@/content/fa';
 import {
-  AGENCY_DEFAULTS,
+  agencyDefaults,
   MARGIN_BENCHMARK,
   agencySchema,
   computeAgencyRate,
@@ -38,12 +38,12 @@ import {
 
 const CostDoughnut = lazy(() => import('@/components/charts/CostDoughnut'));
 
-const META = MODULES.find((m) => m.id === 'agency');
+const moduleMeta = () => moduleText('agency');
 
 export function AgencyPage() {
   const { control, reset } = useForm<AgencyFormValues>({
     resolver: zodResolver(agencySchema) as Resolver<AgencyFormValues>,
-    defaultValues: AGENCY_DEFAULTS,
+    defaultValues: agencyDefaults(),
     mode: 'onChange',
   });
   const { fields, append, remove } = useFieldArray({ control, name: 'roleLines' });
@@ -91,8 +91,8 @@ export function AgencyPage() {
   return (
     <div className="space-y-6">
       <ModuleHeader
-        title={META?.name ?? ''}
-        description={META?.description}
+        title={moduleMeta().name}
+        description={moduleMeta().description}
         guide="agency"
         onHelp={() => void startModuleTour('agency')}
         onExportPdf={hasProposal ? () => printProposal() : undefined}
@@ -284,7 +284,7 @@ export function AgencyPage() {
                       min={MARGIN_BENCHMARK.min}
                       max={MARGIN_BENCHMARK.max}
                       segments={MARGIN_BENCHMARK.segments}
-                      statusLabel={BENCHMARK_STATUS_LABELS}
+                      statusLabel={benchmarkStatusLabels()}
                       formatValue={(v) => formatPercent(v)}
                     />
                     {margin.status === 'danger' ? (
@@ -322,7 +322,7 @@ export function AgencyPage() {
         {hasProposal ? (
           <ProposalSheet
             ref={proposalRef}
-            moduleTitle={META?.name ?? ''}
+            moduleTitle={moduleMeta().name}
             hero={{
               label: label('agency.blended'),
               value: blended !== null ? formatToman(blended) : '—',

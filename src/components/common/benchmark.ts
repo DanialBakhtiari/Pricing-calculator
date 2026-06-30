@@ -1,4 +1,4 @@
-import { labels } from '@/content/fa';
+import { label } from '@/content/fa';
 
 // محک سلامت — کدگذاری یکسان در همه‌ی ماژول‌ها: سبز=سالم، زرد=احتیاط، قرمز=خطر (design §2).
 export type BenchmarkStatus = 'healthy' | 'warning' | 'danger';
@@ -27,9 +27,11 @@ export const STATUS_TEXT: Record<BenchmarkStatus, string> = {
   danger: 'text-destructive',
 };
 
-/** برچسب فارسی وضعیت‌ها (از content/fa) — برای BenchmarkBar. */
-export const BENCHMARK_STATUS_LABELS: Record<BenchmarkStatus, string> = {
-  healthy: labels['benchmark.healthy'],
-  warning: labels['benchmark.warning'],
-  danger: labels['benchmark.danger'],
-};
+/** برچسب وضعیت‌ها به زبان فعال (از content/fa) — برای BenchmarkBar. تابع است تا با تغییر زبان به‌روز شود. */
+export function benchmarkStatusLabels(): Record<BenchmarkStatus, string> {
+  return {
+    healthy: label('benchmark.healthy'),
+    warning: label('benchmark.warning'),
+    danger: label('benchmark.danger'),
+  };
+}

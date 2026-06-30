@@ -1,10 +1,17 @@
-// لایه‌ی فرمت و RTL فارسی — architecture §4. بدون وابستگی به UI.
+// لایه‌ی فرمت و RTL — architecture §4. بدون وابستگی به UI. locale-aware (fa/en).
+
+import { getLocale, type Locale } from '@/lib/i18n/locale';
 
 const PERSIAN_DIGITS = '۰۱۲۳۴۵۶۷۸۹';
 const ARABIC_DIGITS = '٠١٢٣٤٥٦٧٨٩';
 
-/** ارقام لاتین (۰–۹) را به فارسی و نقطه‌ی اعشار را به «٫» تبدیل می‌کند. */
-export function toPersianDigits(input: string | number): string {
+/**
+ * ارقام را برای نمایش بر اساس زبان فرمت می‌کند:
+ * `fa` ⇒ ارقام فارسی + اعشار «٫»؛ `en` ⇒ ارقام لاتین بدون تغییر.
+ * (نام تاریخی حفظ شده تا ~۱۸ محل صدا‌زدن دست‌نخورده بماند.)
+ */
+export function toPersianDigits(input: string | number, locale: Locale = getLocale()): string {
+  if (locale === 'en') return String(input);
   // charAt همیشه string برمی‌گرداند (برای رقم معتبر، رقم فارسی متناظر) — بدون شاخه‌ی اضافی.
   return String(input)
     .replace(/[0-9]/g, (d) => PERSIAN_DIGITS.charAt(Number(d)))
@@ -38,28 +45,37 @@ export function parsePersianNumber(input: string | number): number {
 }
 
 export interface FormatTomanOptions {
-  /** افزودن واحد «تومان» (پیش‌فرض true). */
+  /** افزودن واحد «تومان»/«Toman» (پیش‌فرض true). */
   withUnit?: boolean;
+  locale?: Locale;
 }
 
+const intlLocale = (locale: Locale): string => (locale === 'en' ? 'en-US' : 'fa-IR');
+
 /**
- * عدد را به رشته‌ی تومانِ فارسی با جداکننده‌ی هزارگان فرمت می‌کند.
+ * عدد را به رشته‌ی پولِ بومی با جداکننده‌ی هزارگان فرمت می‌کند (تومان/Toman).
  * گرد‌کردن فقط همین‌جا (لایه‌ی نمایش) رخ می‌دهد — موتور هرگز گرد نمی‌کند.
  */
 export function formatToman(value: number, opts?: FormatTomanOptions): string {
   const withUnit = opts?.withUnit ?? true;
-  const formatted = new Intl.NumberFormat('fa-IR', { maximumFractionDigits: 0 }).format(value);
-  return withUnit ? `${formatted} تومان` : formatted;
+  const locale = opts?.locale ?? getLocale();
+  const formatted = new Intl.NumberFormat(intlLocale(locale), {
+    maximumFractionDigits: 0,
+  }).format(value);
+  if (!withUnit) return formatted;
+  return locale === 'en' ? `${formatted} Toman` : `${formatted} تومان`;
 }
 
 export interface FormatPercentOptions {
   maximumFractionDigits?: number;
+  locale?: Locale;
 }
 
-/** درصد را با ارقام فارسی و نشانه‌ی «٪» فرمت می‌کند (ورودی در واحد درصد، مثلاً 140). */
+/** درصد را با ارقام بومی و نشانه‌ی «٪»/«%» فرمت می‌کند (ورودی در واحد درصد، مثلاً 140). */
 export function formatPercent(value: number, opts?: FormatPercentOptions): string {
-  const formatted = new Intl.NumberFormat('fa-IR', {
+  const locale = opts?.locale ?? getLocale();
+  const formatted = new Intl.NumberFormat(intlLocale(locale), {
     maximumFractionDigits: opts?.maximumFractionDigits ?? 0,
   }).format(value);
-  return `${formatted}٪`;
+  return locale === 'en' ? `${formatted}%` : `${formatted}٪`;
 }

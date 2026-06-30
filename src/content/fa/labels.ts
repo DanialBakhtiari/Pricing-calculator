@@ -1,5 +1,7 @@
-// برچسب‌های UI و فراداده‌ی ماژول‌ها — docs/01/04. هیچ متن فارسی هارد‌کد در JSX.
-export const labels = {
+// برچسب‌های UI و فراداده‌ی ماژول‌ها — docs/01/04. دوزبانه (fa/en). هیچ متن هارد‌کد در JSX.
+import type { Locale } from '@/lib/i18n/locale';
+
+const fa = {
   'app.title': 'ماشین‌حساب قیمت‌گذاری',
   'app.tagline': 'قیمت پروژه‌های وب، وردپرس و سئو — دقیق، قابل‌دفاع و بصری',
 
@@ -23,6 +25,10 @@ export const labels = {
 
   'guide.open': 'آموزش استفاده',
   'guide.close': 'متوجه شدم',
+
+  'locale.toEnglish': 'English',
+  'locale.toPersian': 'فارسی',
+  'locale.change': 'تغییر زبان',
 
   'table.item': 'مورد',
   'table.value': 'مقدار',
@@ -62,6 +68,7 @@ export const labels = {
   'a11y.increase': 'افزایش',
   'a11y.explain': 'توضیح',
   'a11y.fieldHelp': 'توضیح این فیلد',
+  'a11y.status': 'وضعیت',
 
   'scenario.name': 'نام سناریو',
   'scenario.namePlaceholder': 'نام سناریو (اختیاری)',
@@ -191,34 +198,259 @@ export const labels = {
   'playground.complexity': 'سطح پیچیدگی (محک)',
 } as const;
 
-export type LabelKey = keyof typeof labels;
+export type LabelKey = keyof typeof fa;
 
-/** فراداده‌ی چهار ماژول برای داشبورد و router. */
+const en: Record<LabelKey, string> = {
+  'app.title': 'Pricing Calculator',
+  'app.tagline': 'Price Web, WordPress & SEO projects — precise, defensible, visual',
+
+  'action.save': 'Save scenario',
+  'action.exportPdf': 'Export PDF',
+  'action.downloadImage': 'Download image',
+  'action.help': 'Guided tour',
+  'action.reset': 'Reset',
+  'action.tryExample': 'Try an example',
+  'action.add': 'Add',
+  'action.remove': 'Remove',
+  'action.useMar': 'Use MAR as the rate',
+
+  'nav.dashboard': 'Dashboard',
+  'nav.back': 'Back to dashboard',
+
+  'footer.madeBy': 'Designed & developed by Danial Bakhtiari',
+  'footer.site': 'Website',
+  'footer.github': 'GitHub',
+  'footer.rights': 'A free, client-side tool — no data is ever sent to a server.',
+
+  'guide.open': 'How it works',
+  'guide.close': 'Got it',
+
+  'locale.toEnglish': 'English',
+  'locale.toPersian': 'فارسی',
+  'locale.change': 'Change language',
+
+  'table.item': 'Item',
+  'table.value': 'Value',
+
+  'proposal.title': 'Price proposal',
+  'proposal.date': 'Date',
+  'proposal.generatedBy': 'Generated with the Web, WordPress & SEO Pricing Calculator',
+  'proposal.inputs': 'Inputs',
+  'proposal.results': 'Results',
+
+  'breakdown.base': 'Base price',
+  'breakdown.cm': 'Complexity multiplier',
+  'breakdown.rb': 'Risk buffer',
+  'breakdown.asf': 'Agency scaling',
+
+  'benchmark.healthy': 'Healthy',
+  'benchmark.warning': 'Caution',
+  'benchmark.danger': 'Danger',
+
+  'theme.toLight': 'Switch to light theme',
+  'theme.toDark': 'Switch to dark theme',
+
+  'tour.next': 'Next',
+  'tour.prev': 'Back',
+  'tour.done': 'Done',
+
+  'state.empty': 'Fill in the form to see results — or try an example.',
+  'state.invalid': 'The input is invalid; the result cannot be calculated.',
+
+  'unit.toman': 'Toman',
+  'unit.hours': 'hours',
+  'unit.week': 'weeks',
+  'unit.perMonth': 'per month',
+  'unit.percent': '%',
+
+  'a11y.decrease': 'Decrease',
+  'a11y.increase': 'Increase',
+  'a11y.explain': 'Explain',
+  'a11y.fieldHelp': 'Explain this field',
+  'a11y.status': 'Status',
+
+  'scenario.name': 'Scenario name',
+  'scenario.namePlaceholder': 'Scenario name (optional)',
+  'scenario.restore': 'Restore',
+  'scenario.empty': 'No scenarios saved yet.',
+  'scenario.titlePrefix': 'Scenario',
+
+  'mar.costsGroup': 'Annual costs',
+  'mar.capacityGroup': 'Work capacity',
+  'mar.direct': 'Annual direct costs',
+  'mar.overhead': 'Annual overhead',
+  'mar.profit': 'Net profit target',
+  'mar.weeks': 'Working weeks per year',
+  'mar.hoursPerWeek': 'Working hours per week',
+  'mar.utilization': 'Utilization rate',
+  'mar.billable': 'Annual billable hours',
+  'mar.total': 'Total annual cost',
+  'mar.result': 'Minimum Acceptable Rate (MAR)',
+  'mar.resultHint': 'Your absolute hourly-rate floor; below this number you are losing money.',
+  'mar.overheadRatio': 'Overhead ratio',
+  'mar.chartTitle': 'Cost breakdown',
+  'mar.activeRateSet':
+    'This MAR was saved as your active rate and will be suggested in the later modules.',
+  'mar.overheadNA': 'To compute the overhead ratio, direct cost must be greater than zero.',
+  'unit.hoursPerYear': 'hours/year',
+
+  'web.featureGroup': 'Project scope',
+  'web.feature': 'Feature (cheat-sheet)',
+  'web.featurePlaceholder': 'Pick a feature (optional)',
+  'web.hours': 'Estimated project hours',
+  'web.rateGroup': 'Rate & multipliers',
+  'web.rateSource': 'Rate source',
+  'web.rateMar': 'My MAR rate',
+  'web.rateMarket': 'Market rate (manual)',
+  'web.marketRate': 'Market hourly rate',
+  'web.noMar': 'No MAR yet — fill in the “Cost & MAR” module first.',
+  'web.cm': 'Technical Complexity Multiplier (CM)',
+  'web.rbGroup': 'Risk buffer (check all that apply)',
+  'web.rbTotal': 'Total risk buffer',
+  'web.builder': 'Build architecture',
+  'web.addonsGroup': 'Suggested add-ons',
+  'web.addMaintenance': 'Annual maintenance clause (15–20%)',
+  'web.addCwv': 'Performance / CWV optimization (10–15%)',
+  'web.multilang': 'Number of extra languages',
+  'web.multilangExtra': 'Extra hours for multilingual',
+  'web.priceGroup': 'Proposed price',
+  'web.finalPrice': 'Final project price',
+  'web.finalHint': 'Base price × complexity × (1 + risk buffer)',
+  'web.waterfallTitle': 'Price breakdown (waterfall)',
+  'web.tiersTitle': 'Three suggested tiers',
+  'web.summaryTitle': 'Proposal summary',
+  'web.grandTotal': 'Grand total',
+  'web.grandTotalHint': 'Project price + selected add-ons',
+  'web.rateUsed': 'Base rate',
+  'web.rbUsed': 'Risk buffer',
+  'web.maintenanceLine': 'Annual maintenance',
+  'web.performanceLine': 'Performance optimization',
+  'web.recommended': 'Recommended',
+
+  'seo.modeRetainer': 'Monthly Retainer',
+  'seo.modePerformance': 'Performance-based (Hybrid)',
+  'seo.modeAudit': 'Audit',
+  'seo.tabRetainer': 'Monthly',
+  'seo.tabPerformance': 'Performance',
+  'seo.tabAudit': 'Audit',
+  'seo.contentHours': 'Content hours per month',
+  'seo.writerRate': 'Writer hourly rate',
+  'seo.technicalHours': 'Technical SEO hours per month',
+  'seo.outreachHours': 'Outreach hours per month',
+  'seo.seoRate': 'SEO specialist hourly rate',
+  'seo.tools': 'Tools cost share',
+  'seo.retainerResult': 'Monthly retainer',
+  'seo.baseRetainer': 'Base fee',
+  'seo.milestones': 'Milestones achieved',
+  'seo.bonus': 'Bonus per milestone',
+  'seo.estimatedCost': 'Estimated actual cost',
+  'seo.performanceRb': 'Risk buffer',
+  'seo.performanceResult': 'Monthly payment',
+  'seo.performanceSafe': 'The model is safe (base coverage ≥ 70% and risk buffer ≥ 40%).',
+  'seo.auditGroup': 'Audit components (check what you need)',
+  'seo.auditHours': 'Total audit hours',
+  'seo.auditPrice': 'Audit estimate',
+  'seo.auditBand': 'Market reference band: 15 to 50 million Toman — never free.',
+  'seo.roiGroup': 'Client ROI calculator',
+  'seo.cr': 'Site conversion rate (decimal)',
+  'seo.aov': 'Average order value',
+  'seo.deltaTraffic': 'Monthly organic traffic increase',
+  'seo.monthlyRetainer': 'Monthly fee (retainer)',
+  'seo.roiResult': 'Client ROI',
+  'seo.monthlyValue': 'Monthly traffic value',
+  'seo.pitchTitle': 'Ready-made negotiation line',
+  'seo.pitch':
+    'This investment returns about {roi} in the very first month; move the conversation from “cost” to “investment.”',
+  'seo.roiChartValue': 'Monthly value',
+  'seo.roiChartRetainer': 'Monthly fee',
+  'seo.annual': 'Annual equivalent (×12)',
+  'seo.bonusTotal': 'Total bonuses',
+  'seo.auditComponents': 'Selected components',
+  'seo.summaryRetainer': 'Retainer summary',
+  'seo.summaryPerformance': 'Performance summary',
+  'seo.summaryAudit': 'Audit summary',
+  'seo.roiMonthlyNet': 'Monthly net profit',
+
+  'agency.laborGroup': 'Labor',
+  'agency.directLabor': 'Direct labor (annual)',
+  'agency.indirectLabor': 'Indirect labor (annual)',
+  'agency.asf': 'Agency Scaling Factor (ASF)',
+  'agency.rateGroup': 'Agency-level rate',
+  'agency.mar': 'Individual MAR',
+  'agency.cm': 'Complexity multiplier',
+  'agency.agencyRate': 'Agency hourly rate',
+  'agency.rolesGroup': 'Blended rate (roles)',
+  'agency.role': 'Role',
+  'agency.roleHours': 'Hours',
+  'agency.roleRate': 'Hourly rate',
+  'agency.addRole': 'Add role',
+  'agency.blended': 'Blended rate',
+  'agency.marginGroup': 'Profit-margin check',
+  'agency.pFinal': 'Final project price',
+  'agency.cActual': 'Actual project cost',
+  'agency.margin': 'Profit margin',
+  'agency.donutTitle': 'Role shares',
+
+  'playground.title': 'Component showcase',
+  'playground.description':
+    'This page shows how the input fields, benchmark bar, and result card work with the pricing engine. Enter numbers in Persian or English — either works.',
+  'playground.result': 'Adjusted price',
+  'playground.complexity': 'Complexity level (benchmark)',
+};
+
+export const labels: Record<Locale, Record<LabelKey, string>> = { fa, en };
+
+/** فراداده‌ی ثابتِ چهار ماژول (id/path) — مستقل از زبان؛ متن بومی در MODULE_TEXT. */
 export const MODULES = [
-  {
-    id: 'mar',
-    path: '/mar',
-    name: 'موتور هزینه و MAR',
-    description: 'کف نرخ ساعتی قابل‌دفاع خود را پیدا کنید تا زیر قیمت ندهید.',
-  },
-  {
-    id: 'web',
-    path: '/web',
-    name: 'قیمت‌گذاری وب/وردپرس',
-    description: 'قیمت پروژه را با ضریب پیچیدگی و بافر ریسک، قابل‌دفاع کنید.',
-  },
-  {
-    id: 'seo',
-    path: '/seo',
-    name: 'سئو و ROI',
-    description: 'حسابرسی، Retainer و روایت بازگشت سرمایه برای مذاکره.',
-  },
-  {
-    id: 'agency',
-    path: '/agency',
-    name: 'مقیاس‌پذیری آژانس',
-    description: 'ضریب مقیاس، نرخ ترکیبی و راستی‌آزمایی حاشیه‌ی سود.',
-  },
+  { id: 'mar', path: '/mar' },
+  { id: 'web', path: '/web' },
+  { id: 'seo', path: '/seo' },
+  { id: 'agency', path: '/agency' },
 ] as const;
 
 export type ModuleId = (typeof MODULES)[number]['id'];
+
+export interface ModuleText {
+  name: string;
+  description: string;
+}
+
+/** نام و توضیح بومیِ ماژول‌ها برای داشبورد. */
+export const MODULE_TEXT: Record<Locale, Record<ModuleId, ModuleText>> = {
+  fa: {
+    mar: {
+      name: 'موتور هزینه و MAR',
+      description: 'کف نرخ ساعتی قابل‌دفاع خود را پیدا کنید تا زیر قیمت ندهید.',
+    },
+    web: {
+      name: 'قیمت‌گذاری وب/وردپرس',
+      description: 'قیمت پروژه را با ضریب پیچیدگی و بافر ریسک، قابل‌دفاع کنید.',
+    },
+    seo: {
+      name: 'سئو و ROI',
+      description: 'حسابرسی، Retainer و روایت بازگشت سرمایه برای مذاکره.',
+    },
+    agency: {
+      name: 'مقیاس‌پذیری آژانس',
+      description: 'ضریب مقیاس، نرخ ترکیبی و راستی‌آزمایی حاشیه‌ی سود.',
+    },
+  },
+  en: {
+    mar: {
+      name: 'Cost Engine & MAR',
+      description: 'Find your defensible hourly-rate floor so you never underprice.',
+    },
+    web: {
+      name: 'Web/WordPress Pricing',
+      description: 'Make project prices defensible with a complexity multiplier and risk buffer.',
+    },
+    seo: {
+      name: 'SEO & ROI',
+      description: 'Audit, retainer, and a return-on-investment story for negotiations.',
+    },
+    agency: {
+      name: 'Agency Scaling',
+      description: 'Scaling factor, blended rate, and a profit-margin check.',
+    },
+  },
+};

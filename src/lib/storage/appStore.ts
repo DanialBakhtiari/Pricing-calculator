@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { ModuleId } from '@/content/fa';
+import { DEFAULT_LOCALE, type Locale } from '@/lib/i18n/locale';
 
 export type Theme = 'light' | 'dark';
 
@@ -15,6 +16,8 @@ export interface Scenario {
 
 interface AppState {
   theme: Theme;
+  /** زبان فعال رابط کاربری (فارسی RTL / انگلیسی LTR). */
+  locale: Locale;
   /** نرخ فعال مشترک (MAR یا نرخ بازار) که به ماژول ۲ و ۴ تزریق می‌شود. */
   activeRate: number | null;
   welcomeTourDone: boolean;
@@ -22,6 +25,8 @@ interface AppState {
 
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
+  setLocale: (locale: Locale) => void;
+  toggleLocale: () => void;
   setActiveRate: (rate: number | null) => void;
   markWelcomeTourDone: () => void;
   addScenario: (input: Omit<Scenario, 'id' | 'createdAt'>) => Scenario;
@@ -40,12 +45,15 @@ export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
       theme: 'light',
+      locale: DEFAULT_LOCALE,
       activeRate: null,
       welcomeTourDone: false,
       scenarios: [],
 
       setTheme: (theme) => set({ theme }),
       toggleTheme: () => set({ theme: get().theme === 'dark' ? 'light' : 'dark' }),
+      setLocale: (locale) => set({ locale }),
+      toggleLocale: () => set({ locale: get().locale === 'fa' ? 'en' : 'fa' }),
       setActiveRate: (activeRate) => set({ activeRate }),
       markWelcomeTourDone: () => set({ welcomeTourDone: true }),
 

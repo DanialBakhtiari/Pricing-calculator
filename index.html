@@ -13,17 +13,20 @@
       content="ابزار محاسبه‌ی قیمت قابل‌دفاع پروژه‌های وب، وردپرس و سئو — کلاینت‌ساید، فارسی و آفلاین."
     />
     <script>
-      // Set theme before paint to avoid flash of incorrect theme.
+      // Set theme + language/direction before paint to avoid flashes.
       // Reads the persisted zustand appStore blob (key: pricing:app:v1).
       (function () {
         try {
           var raw = localStorage.getItem('pricing:app:v1');
-          var stored = raw ? JSON.parse(raw).state.theme : null;
+          var state = raw ? JSON.parse(raw).state : null;
           var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var dark = stored ? stored === 'dark' : prefersDark;
+          var dark = state && state.theme ? state.theme === 'dark' : prefersDark;
           document.documentElement.classList.toggle('dark', dark);
+          var locale = state && state.locale ? state.locale : 'fa';
+          document.documentElement.lang = locale;
+          document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
         } catch (e) {
-          /* storage unavailable or malformed; fall back to light */
+          /* storage unavailable or malformed; fall back to defaults */
         }
       })();
     </script>

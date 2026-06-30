@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { labels } from '@/content/fa';
+import { label as t } from '@/content/fa';
 import { InfoTooltip } from './InfoTooltip';
 import { STATUS_TEXT, type BenchmarkStatus } from './benchmark';
 
@@ -23,7 +23,7 @@ export function ResultCard({ label, value, tooltip, status, hint, ...rest }: Res
         <div className="text-muted-foreground flex items-center gap-1.5 text-sm">
           <span>{label}</span>
           {tooltip ? (
-            <InfoTooltip content={tooltip} label={`${labels['a11y.explain']} ${label}`} />
+            <InfoTooltip content={tooltip} label={`${t('a11y.explain')} ${label}`} />
           ) : null}
         </div>
         <p

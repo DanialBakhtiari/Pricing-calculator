@@ -1,5 +1,7 @@
 import { type Ref } from 'react';
 import { BRAND, label } from '@/content/fa';
+import { useAppStore } from '@/lib/storage/appStore';
+import { dirOf, type Locale } from '@/lib/i18n/locale';
 
 export interface ProposalRow {
   label: string;
@@ -26,9 +28,10 @@ export interface ProposalSheetProps {
   tiers?: ProposalTier[];
 }
 
-function todayFa(): string {
+function todayLocalized(locale: Locale): string {
   try {
-    return new Intl.DateTimeFormat('fa-IR', { dateStyle: 'long' }).format(new Date());
+    const intl = locale === 'en' ? 'en-US' : 'fa-IR';
+    return new Intl.DateTimeFormat(intl, { dateStyle: 'long' }).format(new Date());
   } catch {
     return '';
   }
@@ -39,8 +42,9 @@ function todayFa(): string {
  * با react-to-print چاپ/PDF می‌شود. روی صفحه پنهان است (در یک wrapper با کلاس hidden).
  */
 export function ProposalSheet({ ref, moduleTitle, hero, sections, tiers }: ProposalSheetProps) {
+  const locale = useAppStore((s) => s.locale);
   return (
-    <div ref={ref} dir="rtl" className="bg-white p-10 font-sans text-neutral-900">
+    <div ref={ref} dir={dirOf(locale)} className="bg-white p-10 font-sans text-neutral-900">
       <header className="flex items-start justify-between border-b-2 border-indigo-600 pb-4">
         <div>
           <p className="text-sm text-neutral-500">{label('app.title')}</p>
@@ -49,7 +53,7 @@ export function ProposalSheet({ ref, moduleTitle, hero, sections, tiers }: Propo
           </h1>
         </div>
         <p className="text-sm text-neutral-500">
-          {label('proposal.date')}: {todayFa()}
+          {label('proposal.date')}: {todayLocalized(locale)}
         </p>
       </header>
 
@@ -110,7 +114,7 @@ export function ProposalSheet({ ref, moduleTitle, hero, sections, tiers }: Propo
       <footer className="mt-10 border-t border-neutral-200 pt-3 text-center text-xs text-neutral-400">
         <p>{label('proposal.generatedBy')}</p>
         <p className="mt-1">
-          {BRAND.author} — {BRAND.site}
+          {BRAND.author[locale]} — {BRAND.site}
         </p>
       </footer>
     </div>

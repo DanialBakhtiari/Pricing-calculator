@@ -9,6 +9,7 @@ import {
   type Toman,
 } from '@/lib/pricing';
 import { numberFieldSchema } from '@/lib/forms/zodField';
+import { getLocale } from '@/lib/i18n/locale';
 import {
   classify,
   type BenchmarkSegment,
@@ -47,19 +48,32 @@ export const agencySchema = z.object({
   cActual: numberFieldSchema(),
 });
 
-export const AGENCY_DEFAULTS: AgencyFormValues = {
-  directLabor: 100_000_000,
-  indirectLabor: 120_000_000,
-  mar: 384_615,
-  cm: 1.0,
-  roleLines: [
-    { role: 'سنیور', hours: 80, rate: 800_000 },
-    { role: 'طراح', hours: 40, rate: 600_000 },
-    { role: 'مدیر پروژه', hours: 20, rate: 500_000 },
-  ],
-  pFinal: 100_000_000,
-  cActual: 70_000_000,
-};
+function defaultsWithRoles(roles: readonly [string, string, string]): AgencyFormValues {
+  return {
+    directLabor: 100_000_000,
+    indirectLabor: 120_000_000,
+    mar: 384_615,
+    cm: 1.0,
+    roleLines: [
+      { role: roles[0], hours: 80, rate: 800_000 },
+      { role: roles[1], hours: 40, rate: 600_000 },
+      { role: roles[2], hours: 20, rate: 500_000 },
+    ],
+    pFinal: 100_000_000,
+    cActual: 70_000_000,
+  };
+}
+
+/** پیش‌فرض فارسی (پایدار برای تست/سازگاری). */
+export const AGENCY_DEFAULTS: AgencyFormValues = defaultsWithRoles(['سنیور', 'طراح', 'مدیر پروژه']);
+
+/** پیش‌فرضِ فرم با نام نقش‌های بومی (زبان فعال) — هنگام مقداردهی اولیه‌ی فرم. */
+export const agencyDefaults = (): AgencyFormValues =>
+  defaultsWithRoles(
+    getLocale() === 'en'
+      ? ['Senior', 'Designer', 'Project manager']
+      : ['سنیور', 'طراح', 'مدیر پروژه'],
+  );
 
 /** §4.4 محک حاشیه: زیر ۱۵٪ قرمز، ۱۵–۲۵٪ زرد، ۲۵٪+ سبز (هدف ۲۵–۴۵٪). */
 export const MARGIN_BENCHMARK = {

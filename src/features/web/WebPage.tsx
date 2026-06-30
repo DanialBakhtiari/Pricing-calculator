@@ -24,13 +24,13 @@ import { RANGES, type MoneyRange } from '@/lib/pricing';
 import { formatPercent, formatToman, toPersianDigits } from '@/lib/format';
 import { useAppStore } from '@/lib/storage/appStore';
 import { startModuleTour } from '@/lib/onboarding/runTour';
-import { BUILDER_MULTIPLIER, FEATURE_CHEAT_SHEET, RB_FACTORS } from '@/data';
-import { MODULES, WEB_TIERS, label, tooltip } from '@/content/fa';
+import { BUILDER_MULTIPLIER, FEATURE_CHEAT_SHEET, RB_FACTORS, pickLabel } from '@/data';
+import { label, moduleText, tooltip, webTiers } from '@/content/fa';
 import { WEB_DEFAULTS, computeWebResult, rbTotal, webSchema, type WebFormValues } from './webForm';
 
 const WaterfallChart = lazy(() => import('@/components/charts/WaterfallChart'));
 
-const META = MODULES.find((m) => m.id === 'web');
+const moduleMeta = () => moduleText('web');
 
 /** بازه‌ی پولی را تک‌مقدار یا «کف – سقف» نشان می‌دهد. */
 function moneyRangeText(r: MoneyRange): string {
@@ -50,7 +50,7 @@ export function WebPage() {
   const result = computeWebResult(values, activeRate);
   const needsMar = values.rateSource === 'mar' && activeRate === null;
 
-  const tierCards = WEB_TIERS.map((content) => {
+  const tierCards = webTiers().map((content) => {
     const priced = result?.tiers.find((t) => t.id === content.id);
     return {
       id: content.id,
@@ -101,8 +101,8 @@ export function WebPage() {
   return (
     <div className="space-y-6">
       <ModuleHeader
-        title={META?.name ?? ''}
-        description={META?.description}
+        title={moduleMeta().name}
+        description={moduleMeta().description}
         guide="web"
         onHelp={() => void startModuleTour('web')}
         onExportPdf={result ? () => printProposal() : undefined}
@@ -129,7 +129,10 @@ export function WebPage() {
                       value={field.value ?? ''}
                       ariaLabel={label('web.feature')}
                       placeholder={label('web.featurePlaceholder')}
-                      options={FEATURE_CHEAT_SHEET.map((f) => ({ value: f.id, label: f.label }))}
+                      options={FEATURE_CHEAT_SHEET.map((f) => ({
+                        value: f.id,
+                        label: pickLabel(f),
+                      }))}
                       onValueChange={(id) => {
                         field.onChange(id);
                         const f = FEATURE_CHEAT_SHEET.find((x) => x.id === id);
@@ -254,7 +257,7 @@ export function WebPage() {
                             }
                           />
                           <span>
-                            {f.label} (+{formatPercent(f.value * 100)})
+                            {pickLabel(f)} (+{formatPercent(f.value * 100)})
                           </span>
                         </label>
                       );
@@ -279,7 +282,10 @@ export function WebPage() {
                       value={field.value}
                       ariaLabel={label('web.builder')}
                       onValueChange={field.onChange}
-                      options={BUILDER_MULTIPLIER.map((b) => ({ value: b.id, label: b.label }))}
+                      options={BUILDER_MULTIPLIER.map((b) => ({
+                        value: b.id,
+                        label: pickLabel(b),
+                      }))}
                     />
                   )}
                 />
@@ -483,7 +489,7 @@ export function WebPage() {
         {result ? (
           <ProposalSheet
             ref={proposalRef}
-            moduleTitle={META?.name ?? ''}
+            moduleTitle={moduleMeta().name}
             hero={{ label: label('web.finalPrice'), value: formatToman(result.proposal.final) }}
             sections={proposalSections}
             tiers={proposalTiers}

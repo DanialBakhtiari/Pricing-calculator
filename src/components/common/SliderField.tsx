@@ -2,7 +2,9 @@ import { useId } from 'react';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { toPersianDigits } from '@/lib/format';
-import { labels } from '@/content/fa';
+import { label as t } from '@/content/fa';
+import { useAppStore } from '@/lib/storage/appStore';
+import { dirOf } from '@/lib/i18n/locale';
 import { InfoTooltip } from './InfoTooltip';
 
 export interface SliderFieldProps {
@@ -31,13 +33,14 @@ export function SliderField({
   ...rest
 }: SliderFieldProps) {
   const labelId = useId();
+  const dir = dirOf(useAppStore((s) => s.locale));
   return (
     <div className="space-y-2" data-tour={rest['data-tour']}>
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
           <Label id={labelId}>{label}</Label>
           {tooltip ? (
-            <InfoTooltip content={tooltip} label={`${labels['a11y.explain']} ${label}`} />
+            <InfoTooltip content={tooltip} label={`${t('a11y.explain')} ${label}`} />
           ) : null}
         </div>
         <span className="text-sm font-medium tabular-nums">
@@ -45,7 +48,7 @@ export function SliderField({
         </span>
       </div>
       <Slider
-        dir="rtl"
+        dir={dir}
         aria-labelledby={labelId}
         value={[value]}
         min={min}

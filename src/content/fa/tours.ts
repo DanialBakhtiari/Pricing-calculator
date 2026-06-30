@@ -1,4 +1,6 @@
-// گام‌های تور آموزشی — docs/05. مستقل از driver.js (فاز ۳ به آن نگاشت می‌شود).
+// گام‌های تور آموزشی — docs/05. دوزبانه (fa/en).
+import type { Locale } from '@/lib/i18n/locale';
+
 export interface TourStep {
   /** انتخاب‌گر عنصر هدف (مثلاً `[data-tour="mar-utilization"]`). نبودنش ⇒ مودال مرکزی. */
   target?: string;
@@ -6,7 +8,7 @@ export interface TourStep {
   body: string;
 }
 
-export const tours = {
+const fa = {
   welcome: [
     {
       body: 'به ماشین‌حساب قیمت‌گذاری خوش آمدید 👋 این ابزار کمک می‌کند قیمت پروژه‌های وب، وردپرس و سئو را دقیق و قابل‌دفاع محاسبه کنید.',
@@ -87,4 +89,87 @@ export const tours = {
   ],
 } as const;
 
-export type TourKey = keyof typeof tours;
+export type TourKey = keyof typeof fa;
+
+const en: Record<TourKey, readonly TourStep[]> = {
+  welcome: [
+    {
+      body: 'Welcome to the pricing calculator 👋 This tool helps you price Web, WordPress, and SEO projects accurately and defensibly.',
+    },
+    {
+      body: 'Pick one of the four modules from this dashboard. We suggest starting with the Cost Engine & MAR so your rate floor is clear.',
+    },
+    {
+      body: 'Wherever you see the "!" icon, hover (or tap on mobile) to read what that field means.',
+    },
+    {
+      body: 'Results come with a chart, and you can save them or export to PDF. Let’s get started!',
+    },
+  ],
+  mar: [
+    {
+      target: '[data-tour="mar-costs"]',
+      body: 'First, enter your annual costs: direct, overhead, and target profit.',
+    },
+    {
+      target: '[data-tour="mar-utilization"]',
+      body: 'Next, set your working hours and — most importantly — the utilization rate, realistically between 0.55 and 0.70.',
+    },
+    {
+      target: '[data-tour="mar-result"]',
+      body: 'This number is your MAR (Minimum Acceptable Rate): the absolute hourly floor. Never quote below it.',
+    },
+    {
+      target: '[data-tour="mar-chart"]',
+      body: 'This chart shows your cost mix. You can use the MAR as the base rate in the project pricing module.',
+    },
+  ],
+  web: [
+    {
+      target: '[data-tour="web-feature"]',
+      body: 'Pick a feature from the cheat-sheet or enter the hours manually.',
+    },
+    {
+      target: '[data-tour="web-cm-rb"]',
+      body: 'Set the Complexity Multiplier (CM) level and the Risk Buffer (RB) items.',
+    },
+    {
+      target: '[data-tour="web-waterfall"]',
+      body: 'The waterfall chart shows how much each factor added to the price — perfect for explaining it to the client.',
+    },
+    {
+      target: '[data-tour="web-tiers"]',
+      body: 'Finally, three proposed tiers are built for the client; the Professional tier is your main recommendation.',
+    },
+  ],
+  seo: [
+    {
+      target: '[data-tour="seo-model"]',
+      body: 'Depending on the model, estimate an audit or a monthly retainer.',
+    },
+    {
+      target: '[data-tour="seo-roi"]',
+      body: 'Fill in the ROI section to show the value of the investment in your client’s CFO language.',
+    },
+    {
+      target: '[data-tour="seo-pitch"]',
+      body: 'Use this ready-made line in your negotiation; it turns the price from a "cost" into an "investment".',
+    },
+  ],
+  agency: [
+    {
+      target: '[data-tour="agency-labor"]',
+      body: 'Enter your direct and indirect labor so the Agency Scaling Factor (ASF) is calculated.',
+    },
+    {
+      target: '[data-tour="agency-roles"]',
+      body: 'Add role rows to get a single blended rate.',
+    },
+    {
+      target: '[data-tour="agency-margin"]',
+      body: 'Finally, verify the project’s real profit margin.',
+    },
+  ],
+};
+
+export const tours: Record<Locale, Record<TourKey, readonly TourStep[]>> = { fa, en };

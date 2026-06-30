@@ -70,7 +70,9 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
-            className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            // موقعیت منطقی (end) تا در RTL سمت چپ و در LTR سمت راست بنشیند؛
+            // ناحیه‌ی لمسِ ۴۴px با pseudo بدون بزرگ‌کردن دکمه.
+            className="text-muted-foreground/70 hover:bg-accent hover:text-foreground focus-visible:ring-ring absolute end-3 top-3 inline-flex size-8 items-center justify-center rounded-full transition-colors before:absolute before:-inset-1.5 before:content-[''] hover:cursor-pointer focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
           >
             <XIcon />
             <span className="sr-only">Close</span>
@@ -85,7 +87,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
+      className={cn("flex flex-col gap-2 text-center sm:text-start", className)}
       {...props}
     />
   )

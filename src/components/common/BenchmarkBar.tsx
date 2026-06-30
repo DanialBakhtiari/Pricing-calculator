@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { toPersianDigits } from '@/lib/format';
+import { label } from '@/content/fa';
 import {
   classify,
   STATUS_BG,
@@ -41,7 +42,7 @@ export function BenchmarkBar({
       <div
         className="relative h-2 w-full overflow-hidden rounded-full"
         role="img"
-        aria-label={`${valueText} — وضعیت: ${statusLabel[status]}`}
+        aria-label={`${valueText} — ${label('a11y.status')}: ${statusLabel[status]}`}
       >
         <div className="absolute inset-0 flex">
           {segments.map((s) => (

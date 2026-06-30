@@ -5,7 +5,7 @@ import { useReactToPrint } from 'react-to-print';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  BENCHMARK_STATUS_LABELS,
+  benchmarkStatusLabels,
   BenchmarkBar,
   FormMoney,
   FormNumber,
@@ -20,7 +20,7 @@ import { RANGES } from '@/lib/pricing';
 import { formatPercent, formatToman, toPersianDigits } from '@/lib/format';
 import { useAppStore } from '@/lib/storage/appStore';
 import { startModuleTour } from '@/lib/onboarding/runTour';
-import { MODULES, label, tooltip } from '@/content/fa';
+import { label, moduleText, tooltip } from '@/content/fa';
 import {
   MAR_DEFAULTS,
   OVERHEAD_BENCHMARK,
@@ -31,7 +31,7 @@ import {
 
 const CostDoughnut = lazy(() => import('@/components/charts/CostDoughnut'));
 
-const META = MODULES.find((m) => m.id === 'mar');
+const moduleMeta = () => moduleText('mar');
 
 export function MarPage() {
   const setActiveRate = useAppStore((s) => s.setActiveRate);
@@ -87,8 +87,8 @@ export function MarPage() {
   return (
     <div className="space-y-6">
       <ModuleHeader
-        title={META?.name ?? ''}
-        description={META?.description}
+        title={moduleMeta().name}
+        description={moduleMeta().description}
         guide="mar"
         onHelp={() => void startModuleTour('mar')}
         onExportPdf={result ? () => printProposal() : undefined}
@@ -207,7 +207,7 @@ export function MarPage() {
                         min={OVERHEAD_BENCHMARK.min}
                         max={OVERHEAD_BENCHMARK.max}
                         segments={OVERHEAD_BENCHMARK.segments}
-                        statusLabel={BENCHMARK_STATUS_LABELS}
+                        statusLabel={benchmarkStatusLabels()}
                         formatValue={(v) => formatPercent(v)}
                       />
                     </div>
@@ -254,7 +254,7 @@ export function MarPage() {
         {result ? (
           <ProposalSheet
             ref={proposalRef}
-            moduleTitle={META?.name ?? ''}
+            moduleTitle={moduleMeta().name}
             hero={{ label: label('mar.result'), value: formatToman(result.mar) }}
             sections={proposalSections}
           />

@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { GuideDialog } from '@/components/common/GuideDialog';
 import { useAppStore } from '@/lib/storage/appStore';
 import { startModuleTour } from '@/lib/onboarding/runTour';
-import { MODULES, label, type ModuleId } from '@/content/fa';
+import { MODULES, label, moduleText, type ModuleId } from '@/content/fa';
 import { isEmbed } from '@/app/embed';
 
 const MODULE_ICONS: Record<ModuleId, ComponentType<{ className?: string }>> = {
@@ -70,19 +70,20 @@ export function DashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2">
         {MODULES.map((m) => {
           const Icon = MODULE_ICONS[m.id];
+          const mt = moduleText(m.id);
           return (
             <Card key={m.id} className="flex flex-col">
               <CardHeader>
                 <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-lg">
                   <Icon className="size-5" />
                 </div>
-                <CardTitle className="pt-2">{m.name}</CardTitle>
-                <CardDescription>{m.description}</CardDescription>
+                <CardTitle className="pt-2">{mt.name}</CardTitle>
+                <CardDescription>{mt.description}</CardDescription>
               </CardHeader>
               <CardContent className="mt-auto">
                 <Button asChild className="w-full sm:w-auto">
                   <Link to={m.path}>
-                    {m.name}
+                    {mt.name}
                     <ArrowLeft aria-hidden className="rtl:-scale-x-100" />
                   </Link>
                 </Button>

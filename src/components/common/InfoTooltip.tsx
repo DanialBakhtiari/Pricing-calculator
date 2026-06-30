@@ -2,7 +2,7 @@ import { Info } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { labels } from '@/content/fa';
+import { label as t } from '@/content/fa';
 import { useCoarsePointer } from './use-coarse-pointer';
 
 export interface InfoTooltipProps {
@@ -20,7 +20,7 @@ export interface InfoTooltipProps {
  */
 export function InfoTooltip({
   content,
-  label = labels['a11y.fieldHelp'],
+  label = t('a11y.fieldHelp'),
   side = 'top',
   className,
 }: InfoTooltipProps) {

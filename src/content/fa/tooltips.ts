@@ -1,5 +1,7 @@
-// متن tooltipها («!») — docs/05. هیچ متن فارسی در JSX هارد‌کد نشود؛ از این‌جا با کلید خوانده شود.
-export const tooltips = {
+// متن tooltipها («!») — docs/05. دوزبانه (fa/en). از content/fa/index با کلید خوانده می‌شود.
+import type { Locale } from '@/lib/i18n/locale';
+
+const fa = {
   // ماژول ۱ — موتور هزینه و MAR
   'mar.direct':
     'هزینه‌های مستقیم سالانه: حقوق پایه‌ی شما/کارمندان، هاست پروژه‌ها و لایسنس‌های اختصاصی. یعنی پولی که مستقیماً صرف «انجام کار» می‌شود.',
@@ -71,4 +73,80 @@ export const tooltips = {
     'حاشیه سود واقعی = (قیمت نهایی − هزینه‌ی واقعی) ÷ قیمت نهایی. هدف سالم: ۲۵٪–۴۵٪. زیر ۱۵٪ یعنی یا قیمت‌گذاری اشتباه است یا اجرای پروژه ناکارآمد.',
 } as const;
 
-export type TooltipKey = keyof typeof tooltips;
+export type TooltipKey = keyof typeof fa;
+
+const en: Record<TooltipKey, string> = {
+  // Module 1 — Cost engine & MAR
+  'mar.direct':
+    'Annual direct costs: your/your staff’s base salaries, project hosting, and dedicated licenses. In other words, money spent directly on "doing the work".',
+  'mar.overhead':
+    'Annual overhead: costs not tied to any single project but still necessary — rent, software (Figma/Slack/Asana), insurance, accounting, marketing.',
+  'mar.profit':
+    'Target net profit: the profit you want left over after all costs (even your own salary). This is not a "wage", it is "profit".',
+  'mar.weeks':
+    'Actual working weeks per year. After deducting leave and holidays it is usually around 48 weeks, not 52.',
+  'mar.hoursPerWeek':
+    'Working hours per week. The basis for calculation, not necessarily hours present.',
+  'mar.utilization':
+    'Utilization rate: what fraction of your working hours is actually billed to clients. Time spent on email, negotiation, management, and marketing is not billable. Realistic: 0.55 to 0.70. Assuming 1.0 is a "fatal mistake".',
+  'mar.result':
+    'Minimum Acceptable Rate (MAR): the absolute floor of your hourly rate. Below this number you are losing money, even if it feels like you are earning.',
+  'mar.overheadRatio':
+    'Overhead ratio = overhead ÷ direct cost. Healthy agency benchmark: 40% to 80%. Above 100% means the structure has become too heavy.',
+
+  // Module 2 — Web/WordPress pricing
+  'web.rateSource':
+    'Base rate: you can use your own calculated MAR or enter a market rate manually.',
+  'web.hours':
+    'Estimated total project hours. You can pick a row from the "feature cheat-sheet" to auto-fill the suggested hours and multiplier.',
+  'web.cm':
+    'Complexity Multiplier (CM): simple=1.0, medium=1.3–1.5, complex=1.6–2.0, very complex=2.1–2.5. The more technical logic and integration, the higher the number.',
+  'web.rb':
+    'Risk Buffer (RB): to cover uncertainty. Check every item that applies; the percentages add up (e.g. vague brief 15% + first project of this type 20% = 35%).',
+  'web.builder':
+    'Build architecture: a standard Page Builder is faster but adds bloat; a custom theme gives higher control and performance but takes more time. It affects the price.',
+  'web.maintenance':
+    'For custom code, propose an "annual maintenance" line equal to 15%–20% of the build cost; it both covers risk and creates recurring revenue.',
+  'web.cwv':
+    'If the client cares about speed and SEO, price "performance optimization" separately: typically 10%–15% of the total budget.',
+  'web.multilang':
+    'For each additional language, add roughly 20% to the base hours of that same section.',
+  'web.tiers':
+    'A three-tier offer (Basic/Pro/Enterprise) raises the conversion rate. Most clients pick the middle tier; the third tier makes the middle one look more reasonable.',
+  'web.waterfall':
+    'This chart shows how the base price reaches the final price through the complexity multiplier and risk buffer — perfect for explaining "why this price" to the client.',
+
+  // Module 3 — SEO & ROI
+  'seo.audit':
+    'An audit is a one-time project and the client’s point of entry. Do not give it away for free; it proves the value of your expertise before any long-term commitment (typically 15–50 million Toman).',
+  'seo.contentHours': 'Monthly content-production hours × writer’s rate.',
+  'seo.technicalHours': 'Monthly technical-optimization hours × SEO specialist’s rate.',
+  'seo.outreachHours': 'Hours for link building and publisher outreach × SEO specialist’s rate.',
+  'seo.tools': 'This client’s share of tooling costs (Ahrefs/SEMrush/Screaming Frog, etc.).',
+  'seo.performance':
+    'The performance-based model is the riskiest because Google’s algorithm is outside your control. Always charge a "base fee" that covers at least 70% of the real cost, and set a risk buffer ≥ 40%. Never accept 100% of the risk.',
+  'seo.cr': 'The client site’s conversion rate (as a decimal; 2% = 0.02).',
+  'seo.aov': 'The client’s average order value.',
+  'seo.deltaTraffic':
+    'The forecasted increase in monthly organic visitors. Estimate conservatively.',
+  'seo.roi':
+    'Client ROI = (monthly traffic value − monthly cost) ÷ cost. Instead of "25 million per month", say "140% return in the very first month". It moves the conversation from "cost" to "investment".',
+
+  // Module 4 — Agency scalability
+  'agency.directLabor':
+    'Direct labor: salaries of developers, designers, and SEO specialists who work directly on the project.',
+  'agency.indirectLabor':
+    'Indirect labor: salaries of the project manager, sales, HR, and CEO. These layers must be covered in the price of every project.',
+  'agency.asf':
+    'Agency Scaling Factor = 1 + (indirect labor ÷ direct labor). This is why one hour of work at an agency costs more than the same person as a freelancer.',
+  'agency.blended':
+    'Blended rate: the weighted average rate across all roles. You give the client a single, transparent number while freely optimizing the team mix behind the scenes.',
+  'agency.roles':
+    'For each role, enter the hours and the internal rate. Blended rate = sum of (hours × rate) ÷ sum of hours.',
+  'agency.mar':
+    'Your individual MAR (from the "Cost & MAR" module). It is the basis for the agency-level rate: agency rate = MAR × ASF × complexity multiplier.',
+  'agency.margin':
+    'Actual profit margin = (final price − real cost) ÷ final price. Healthy target: 25%–45%. Below 15% means either the pricing is wrong or the project execution is inefficient.',
+};
+
+export const tooltips: Record<Locale, Record<TooltipKey, string>> = { fa, en };

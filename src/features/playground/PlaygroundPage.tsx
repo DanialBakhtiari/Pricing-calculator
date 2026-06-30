@@ -3,7 +3,7 @@ import { adjustedPrice, RANGES } from '@/lib/pricing';
 import { formatToman, toPersianDigits } from '@/lib/format';
 import { Card, CardContent } from '@/components/ui/card';
 import {
-  BENCHMARK_STATUS_LABELS,
+  benchmarkStatusLabels,
   BenchmarkBar,
   ModuleHeader,
   MoneyField,
@@ -93,7 +93,7 @@ export function PlaygroundPage() {
                 min={RANGES.cm.min}
                 max={RANGES.cm.max}
                 segments={CM_SEGMENTS}
-                statusLabel={BENCHMARK_STATUS_LABELS}
+                statusLabel={benchmarkStatusLabels()}
                 formatValue={(v) => `${toPersianDigits(v.toFixed(1))}×`}
               />
             </CardContent>

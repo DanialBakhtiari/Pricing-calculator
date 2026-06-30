@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { parsePersianNumber, toPersianDigits } from '@/lib/format';
-import { labels } from '@/content/fa';
+import { label as t } from '@/content/fa';
 import { InfoTooltip } from './InfoTooltip';
 
 export interface NumberFieldProps {
@@ -82,9 +82,7 @@ export function NumberField({
         <Label htmlFor={id}>{label}</Label>
         {/* واحد کنار لیبل می‌آید (نه داخل اینپوت) تا هرگز روی عدد نیفتد. */}
         {unit ? <span className="text-muted-foreground text-xs">({unit})</span> : null}
-        {tooltip ? (
-          <InfoTooltip content={tooltip} label={`${labels['a11y.explain']} ${label}`} />
-        ) : null}
+        {tooltip ? <InfoTooltip content={tooltip} label={`${t('a11y.explain')} ${label}`} /> : null}
       </div>
 
       <div className="flex items-stretch gap-2">
@@ -93,7 +91,7 @@ export function NumberField({
           variant="outline"
           size="icon"
           className="size-11 shrink-0"
-          aria-label={`${labels['a11y.decrease']} ${label}`}
+          aria-label={`${t('a11y.decrease')} ${label}`}
           onClick={() => step10(-1)}
         >
           <Minus aria-hidden />
@@ -124,7 +122,7 @@ export function NumberField({
           variant="outline"
           size="icon"
           className="size-11 shrink-0"
-          aria-label={`${labels['a11y.increase']} ${label}`}
+          aria-label={`${t('a11y.increase')} ${label}`}
           onClick={() => step10(1)}
         >
           <Plus aria-hidden />
