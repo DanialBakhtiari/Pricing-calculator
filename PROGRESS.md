@@ -12,8 +12,8 @@
 | ۳ | ماژول MAR | ✅ | فرم+نتیجه+CostDoughnut+سناریو+tour، ۹۸ تست، نرخ فعال تزریق، باندل ۱۴۹KB gz |
 | ۴ | ماژول وب/وردپرس | ✅ | Cheat Sheet+CM/RB/Builder+افزودنی+Waterfall+۳سطح، ۱۰۶ تست، Vector 337.5M |
 | ۵ | ماژول سئو/ROI + آژانس | ✅ | SEO(۴مدل+ROI+RoiChart)+آژانس(ASF/blended/margin+donut)، ۱۲۱ تست، Vectorها |
-| ۶ | قابلیت‌های فرابخشی (PDF/سناریو/embed) | ⬜ | — |
-| ۷ | PWA، عملکرد، A11y، e2e، انتشار | ⬜ | — |
+| ۶ | قابلیت‌های فرابخشی (PDF/سناریو/embed) | ✅ | ProposalSheet+react-to-print، تور خوش‌آمد، embed+postMessage |
+| ۷ | PWA، عملکرد، A11y، e2e، انتشار | ✅ | vite-plugin-pwa، axe a11y، Playwright ۸ تست، README+snippet |
 
 ---
 
@@ -88,3 +88,11 @@
 **راستی‌آزمایی مستقل (۱ reviewer):** ۵ یافته؛ ۱ واقعی (نبود tooltip فیلد MAR آژانس) اعمال شد + tooltipهای roles/margin افزوده شد. ۴ رد شد (cm در computeAgencyRate guard دارد؛ roleShares و dataDoughnut هردو guard دارند؛ بازاستفاده‌ی tooltip CM عمومی قابل‌قبول است).
 
 **ریسک باقی‌مانده:** تزریق خودکار activeRate به نرخ آژانس به فاز ۶ موکول. تورهای driver.js نیاز به data-tour روی همه‌ی عناصر هدف دارند (فاز ۶/۷ صیقل).
+
+### فاز ۶ — قابلیت‌های فرابخشی (✅ تمام — 2026-06-30)
+خروجی PDF (`ProposalSheet` + react-to-print در هر ۴ ماژول)، تور خوش‌آمد یک‌باره (driver.js، فارسی)، حالت `?embed=1` با postMessage ارتفاع، آیکن ماژول‌ها در داشبورد. سناریوها از فاز ۲ (ScenarioBar) و PNG نمودار از فاز ۳ کامل بودند.
+
+### فاز ۷ — PWA/عملکرد/a11y/e2e/انتشار (✅ تمام — 2026-06-30)
+PWA نصب‌شدنی/آفلاین (vite-plugin-pwa، manifest فارسی RTL، آیکن‌های ساخته‌شده با encoder خالص JS)، تست‌های a11y با axe (۴ یافته رفع شد)، Playwright e2e (۸/۸ سبز)، README انتشار + snippet جاسازی. باندل اولیه ۱۳۶KB gz (< ۱۷۰)، همه‌ی صفحات/نمودارها lazy. **۱۲۷ تست واحد + ۸ e2e سبز.**
+
+> تنها مورد باقی‌مانده برای محیط CI/مرورگر واقعی: اجرای Lighthouse (Perf/A11y/PWA) که نیاز به سرور https/headless دارد؛ ساختار برای آن آماده است.

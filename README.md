@@ -1,73 +1,109 @@
-# 🧮 کیت ساخت «ماشین‌حساب قیمت‌گذاری وب / وردپرس / سئو»
+# 🧮 ماشین‌حساب قیمت‌گذاری وب، وردپرس و سئو
 
-این پوشه یک **کیت راه‌اندازی کامل برای Claude Code** است: قانون اساسی، اسناد محصول/معماری/طراحی، مشخصات دقیق فرمول‌ها، فازبندی، قواعد، مهارت‌ها و یک **مستر پرامپت با حلقه‌ی خوداصلاحی**. کافی است این پوشه را به Claude Code بدهی و بگویی شروع کند؛ خودش ابزار را فاز‌به‌فاز می‌سازد، تست می‌کند و خودش را اصلاح می‌کند.
+ابزار تحت وبِ **کلاینت‌ساید، فارسی (RTL) و آفلاین‌کار (PWA)** برای محاسبه‌ی قیمت قابل‌دفاع پروژه‌های وب، وردپرس و سئو. در کمتر از چند دقیقه، با چند ورودی ساده، یک **قیمت دقیق + نمودار + پروپوزال قابل‌چاپ** می‌سازد. هیچ بک‌اندی ندارد؛ همه‌چیز در مرورگر اجرا و در `localStorage` ذخیره می‌شود.
 
-منبع علمی محتوا: «راهنمای جامع قیمت‌گذاری پروژه‌های وب، وردپرس و سئو».
-
----
-
-## 🚀 چطور شروع کنم؟
-
-۱. کل این پوشه (`wp-seo-pricing-tool/`) را به‌عنوان فولدر پروژه باز کن (همان جایی که می‌خواهی کد ساخته شود).
-۲. Claude Code را در این پوشه اجرا کن.
-۳. این را بگو:
-> «فایل `START.md` را بخوان و دقیقاً اجرا کن. اول `CLAUDE.md` و کل `docs/` را بخوان، بعد طبق حلقه‌ی خوداصلاحی از فاز ۰ شروع کن.»
-
-همین. Claude Code از آن‌جا خودش پیش می‌رود و بعد از هر فاز گزارش می‌دهد.
-
-> 💡 می‌خواهی یک فاز خاص را جدا اجرا کنی؟ هر فاز در `docs/06-PHASES.md` یک «Prompt آماده» دارد.
+> واحد پول **تومان**، ارقام **فارسی**. منطق محاسباتی دقیقاً از `docs/03-PRICING-ENGINE-SPEC.md` (منبع حقیقت).
 
 ---
 
-## 📁 نقشه‌ی فایل‌ها
+## ✨ چهار ماژول
 
-```
-wp-seo-pricing-tool/
-├── README.md                 ← همین فایل (راهنمای شروع)
-├── START.md                  ← ⭐ مستر پرامپت با حلقه‌ی خوداصلاحی (این را بده به Claude Code)
-├── CLAUDE.md                 ← قانون اساسی: استک، نسخه‌ها، Definition of Done، خط‌قرمزها
-├── docs/
-│   ├── 01-PRD.md                  ← محصول: کاربر، نیازمندی‌ها، دامنه، معیار موفقیت
-│   ├── 02-ARCHITECTURE.md         ← معماری فنی، state، RTL، PWA، جاسازی، تست
-│   ├── 03-PRICING-ENGINE-SPEC.md  ← ⭐ منبع حقیقت فرمول‌ها + Test Vectors
-│   ├── 04-DESIGN-SYSTEM.md        ← توکن رنگ OKLCH، تایپوگرافی، کامپوننت‌ها، چارت، تور
-│   ├── 05-CONTENT-TOOLTIPS.md     ← متن دقیق همه‌ی tooltipها و گام‌های آموزش (فارسی)
-│   ├── 06-PHASES.md               ← فاز ۰ تا ۷ با معیار پذیرش + prompt هر فاز
-│   └── 07-SELF-CORRECTION-LOOP.md ← روش خوداصلاحی و چک‌لیست QA
-└── .claude/
-    ├── rules/                ← coding-standards · rtl-i18n · accessibility
-    └── skills/               ← pricing-formulas · shadcn-ui-builder · chartjs-viz
-                                · pwa-and-onboarding · self-review
+| ماژول | چه می‌کند |
+|:---|:---|
+| **موتور هزینه و MAR** | کف نرخ ساعتی قابل‌دفاع (MAR) از روی هزینه‌ها و ظرفیت کاری + نمودار ترکیب هزینه |
+| **قیمت‌گذاری وب/وردپرس** | `قیمت پایه × CM × (۱+RB)`، نمودار آبشاری، افزودنی‌ها، و **سه سطح Essential/Pro/Enterprise** |
+| **سئو و ROI** | Retainer ماهانه · مدل عملکردمحور (با هشدار ایمنی) · حسابرسی · محاسبه‌گر ROI مشتری + جمله‌ی مذاکره |
+| **مقیاس‌پذیری آژانس** | ضریب مقیاس (ASF) · نرخ ترکیبی (ردیف نقش‌ها) · راستی‌آزمایی حاشیه‌ی سود با محک |
+
+**قابلیت‌های مشترک:** نرخ MAR به‌صورت خودکار به ماژول‌های بعد تزریق می‌شود · tooltip روی هر فیلد · تور آموزشی driver.js · ذخیره/بازیابی سناریو · خروجی PDF پروپوزال · دانلود PNG نمودار · تم روشن/تیره · کاملاً RTL و ریسپانسیو · نصب‌شدنی و آفلاین (PWA).
+
+---
+
+## 🛠 اجرا و توسعه
+
+پیش‌نیاز: **Node ≥ 22** و **pnpm ≥ 9**.
+
+```bash
+pnpm install        # نصب وابستگی‌ها
+pnpm dev            # سرور توسعه → http://localhost:5173
+pnpm build          # بیلد production در dist/
+pnpm preview        # پیش‌نمایش بیلد
 ```
 
----
+### کیفیت و تست
 
-## 🛠 چه چیزی ساخته می‌شود؟
+```bash
+pnpm typecheck      # tsc strict
+pnpm lint           # ESLint flat
+pnpm format         # Prettier
+pnpm test           # Vitest (واحد + کامپوننت + a11y با axe)
+pnpm test:cov       # پوشش (موتور قیمت‌گذاری ۱۰۰٪)
+pnpm e2e            # Playwright e2e روی بیلد preview
+```
 
-یک ابزار تحت وب با این مشخصات:
-
-- **چهار ماژول:** موتور هزینه و MAR · قیمت‌گذاری وب/وردپرس (CM×(1+RB)) · سئو و ROI · مقیاس‌پذیری آژانس (ASF/Blended Rate).
-- **کاملاً فارسی و راست‌چین**، ارقام فارسی، واحد تومان.
-- **tooltip («!») روی هر فیلد** + **آموزش گام‌به‌گام با driver.js**.
-- **نمودار با Chart.js** (آبشاری قیمت، ROI، ترکیب هزینه، سهم نقش‌ها).
-- **PWA** نصب‌شدنی و آفلاین‌کار.
-- **خروجی PDF پروپوزال سه‌سطحی** + دانلود تصویر نمودار.
-- **بدون بک‌اند**: همه‌چیز کلاینت‌ساید با ذخیره‌ی محلی.
-- **قابل‌جاسازی** در هر سایتی (حالت `?embed=1` + snippet iframe برای وردپرس/HTML).
-
-## 🧱 استک (پین‌شده، میانه‌ی ۲۰۲۶)
-
-Vite 8 · React 19 · TypeScript (strict) · Tailwind CSS v4 · shadcn/ui · react-hook-form + zod · chart.js 4 + react-chartjs-2 · driver.js 1.6 · vite-plugin-pwa 1.3 · zustand · Vitest + Testing Library + Playwright · pnpm.
-
-> جزئیات و دلیل هر انتخاب در `CLAUDE.md §۲` و `docs/02-ARCHITECTURE.md`.
+> آیکن‌های PWA با `node scripts/gen-icons.mjs` ساخته می‌شوند (بدون وابستگی بومی).
 
 ---
 
-## ✅ چرا این کیت کیفیت بالا می‌دهد؟
+## 🌐 جاسازی در سایت (Embed)
 
-- **منبع حقیقت واحد برای فرمول‌ها** (`docs/03`) با **Test Vector** عددی ⇒ صفر خطای محاسباتی.
-- **حلقه‌ی خوداصلاحی** (`docs/07`) ⇒ Claude Code خودش نقد و اصلاح می‌کند تا معیار پذیرش برآورده شود.
-- **Definition of Done سخت‌گیر** ⇒ هیچ فازی با تست قرمز «تمام» نمی‌شود.
-- **قواعد RTL/دسترس‌پذیری** از ابتدا ⇒ تجربه‌ی فارسی درست، نه وصله‌ی بعدی.
+ابزار از `?embed=1` پشتیبانی می‌کند: هدر اپ مخفی و ارتفاع iframe خودکار تنظیم می‌شود (via `postMessage`). برای جاسازی در وردپرس یا هر HTML:
 
-موفق باشی 💪
+```html
+<iframe
+  id="pricing-tool"
+  src="https://YOUR-DOMAIN/?embed=1"
+  title="ماشین‌حساب قیمت‌گذاری"
+  loading="lazy"
+  style="width:100%;border:0;min-height:600px"
+></iframe>
+<script>
+  window.addEventListener('message', function (e) {
+    if (e.data && e.data.type === 'wp-seo-pricing:height') {
+      var f = document.getElementById('pricing-tool');
+      if (f) f.style.height = e.data.height + 'px';
+    }
+  });
+</script>
+```
+
+از **hash router** استفاده می‌شود؛ بنابراین زیر هر مسیر/ساب‌دامین بدون پیکربندی سرور کار می‌کند (مثلاً `tools.example.com/#/web`). فقط در صورت میزبانی سفت‌وسخت، `frame-ancestors` در CSP را برای دامنه‌ی سایت میزبان تنظیم کنید.
+
+---
+
+## 🚢 انتشار (Deploy)
+
+خروجی `pnpm build` یک سایت **استاتیک** در `dist/` است؛ روی هر CDN/هاست استاتیک (Netlify, Vercel, GitHub Pages, Cloudflare Pages, یا یک پوشه‌ی ساده) قابل میزبانی است. چون مسیریابی hash است، نیازی به rewrite سمت سرور نیست. Service worker با `registerType: autoUpdate` نسخه‌ی جدید را خودکار به‌روزرسانی می‌کند.
+
+---
+
+## 🧱 استک
+
+Vite 8 (Rolldown) · React 19 · TypeScript strict · Tailwind CSS v4 (CSS-first, OKLCH) · shadcn/ui · react-hook-form + zod · chart.js + react-chartjs-2 · driver.js · vite-plugin-pwa (Workbox) · zustand + persist · react-to-print · Vitest + Testing Library + vitest-axe + Playwright · pnpm.
+
+## 🏗 معماری
+
+**هسته‌ی خالص + پوسته‌ی نازک.** کل منطق محاسباتی در `src/lib/pricing/` است — توابع خالصِ zod-validated، بدون هیچ وابستگی به React، با پوشش تست ۱۰۰٪. UI فقط این توابع را صدا می‌زند و **هیچ فرمولی را تکرار نمی‌کند**.
+
+```
+src/
+├── app/            # router (hash)، layout، تم، embed
+├── components/
+│   ├── ui/         # shadcn primitives (owned)
+│   ├── common/     # InfoTooltip, MoneyField, ResultCard, TierCards, SummaryRow, ProposalSheet …
+│   └── charts/     # ChartBase, CostDoughnut, WaterfallChart, RoiChart (همه lazy)
+├── features/       # mar · web · seo · agency · dashboard · playground
+├── lib/
+│   ├── pricing/    # ⭐ موتور خالص (types, mar, web, seo, agency, orchestrate)
+│   ├── format/     # formatToman, toPersianDigits, parsePersianNumber, formatPercent
+│   ├── storage/    # zustand appStore (persist)
+│   ├── forms/      # zodField + پل‌های فرم
+│   └── onboarding/ # تور driver.js
+└── content/fa/     # تمام متن‌ها و tooltipها (i18n-ready)
+```
+
+اسناد مرجع پروژه در `docs/` و قواعد در `.claude/`.
+
+---
+
+ساخته‌شده با حلقه‌ی خوداصلاحی و راستی‌آزمایی مستقل در هر فاز. 💪

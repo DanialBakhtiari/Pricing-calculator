@@ -77,6 +77,16 @@
 - **حذف `ModulePlaceholder`** (هر چهار ماژول واقعی شدند). باندل اولیه به **۱۳۶٫۶KB gz** رسید (همه‌ی صفحات lazy chunk).
 - نرخ آژانس فعلاً MAR دستی می‌گیرد (تزریق خودکار activeRate به آژانس به فاز ۶ موکول — تصمیم سادگی).
 
+## 2026-06-30 — Phase 6+7 (Cross-cutting + Release)
+
+- **خروجی PDF با `react-to-print`** (تصمیم باز architecture §۱۳ نهایی شد): چاپ مرورگر → «ذخیره به‌صورت PDF». کامپوننت `ProposalSheet` (A4، RTL، رنگ‌های صریحِ روشن مستقل از تم) در هر چهار ماژول؛ دکمه‌ی «خروجی PDF» فقط وقتی نتیجه هست ظاهر می‌شود. سبک‌تر از html2canvas+jsPDF و RTL درست.
+- **تور خوش‌آمد**: یک‌بار در اولین بازدید داشبورد (driver.js)، با فلگ `welcomeTourDone`؛ در حالت embed خاموش. عدد پیشرفت تور با `onPopoverRender` فارسی شد («۲ از ۳»).
+- **حالت embed (`?embed=1`)**: پوسته‌ی اپ مخفی + `postMessage` ارتفاع برای auto-height؛ snippet در README.
+- **PWA با `vite-plugin-pwa`** (Workbox generateSW، `autoUpdate`): manifest فارسی RTL، precache کامل اپ+فونت (آفلاین کامل چون بک‌اند ندارد). آیکن‌ها با اسکریپت **encoder خالصِ JS** (`scripts/gen-icons.mjs`) ساخته شدند — بدون sharp/وابستگی بومی (پس‌زمینه‌ی برند + نمودار میله‌ای صعودی).
+- **تست‌های a11y با `vitest-axe`**: axe روی هر صفحه؛ یافت و رفع شد — banner تکراری (ModuleHeader به `<div>`)، نام دسترس‌پذیر thumb اسلایدر (forward به Thumb)، نام SelectTriggerها، label ورودی‌های ردیف نقش. (color-contrast در jsdom محاسبه‌پذیر نیست → فاز Lighthouse.)
+- **Playwright e2e**: ۸ تست روی بیلد preview (RTL، هر ماژول، toggle→جمع کل، تور، manifest). فایل‌ها `*.e2e.ts` تا vitest نگیرد؛ از tsc/eslint جدا (Playwright خودش TS را ترجمه می‌کند).
+- **بازطراحی UI (بازخورد کاربر)**: الگوی «فرم ۳/۵ + خلاصه‌ی زنده‌ی چسبان ۲/۵ + نمودار تمام‌عرض» در هر چهار ماژول؛ toggleهای وب روی **«جمع کل پیشنهاد»** اثر می‌گذارند؛ هدف لمس ≥۴۴px؛ سرریز اعداد بلند رفع شد.
+
 ### تصمیمات باز (طبق architecture §۱۳ — در فاز مربوطه قطعی می‌شوند)
 - روش PDF: شروع با چاپ مرورگر (`react-to-print`)، ارتقا به `html2canvas+jsPDF` در صورت نیاز (تصمیم نهایی: فاز ۶).
 - Waterfall: پیاده‌سازی دستی روی Bar چارت بدون پلاگین اضافه (حفظ سبکی باندل).
