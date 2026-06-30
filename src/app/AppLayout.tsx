@@ -11,6 +11,7 @@ import { dirOf } from '@/lib/i18n/locale';
 import { BRAND, label } from '@/content/fa';
 import { useApplyTheme } from './use-apply-theme';
 import { useApplyLocale } from './use-apply-locale';
+import { PwaInstall } from './PwaInstall';
 import { isEmbed, usePostHeight } from './embed';
 
 /** تاگل تم روشن/تیره. */
@@ -69,11 +70,12 @@ export function AppLayout() {
             </div>
           ) : (
             <header className="bg-background/80 sticky top-0 z-10 border-b backdrop-blur">
-              <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-                <Link to="/" className="font-bold">
+              <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3">
+                <Link to="/" className="min-w-0 truncate font-bold">
                   {label('app.title')}
                 </Link>
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 items-center gap-2">
+                  <PwaInstall />
                   <LanguageToggle />
                   <ThemeToggle />
                 </div>

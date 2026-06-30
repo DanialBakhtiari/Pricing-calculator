@@ -26,6 +26,13 @@ const fa = {
   'guide.open': 'آموزش استفاده',
   'guide.close': 'متوجه شدم',
 
+  'install.button': 'نصب برنامه',
+  'install.guideTitle': 'نصب روی دستگاه',
+  'install.guideIntro':
+    'این ابزار را مثل یک برنامه نصب کنید: آفلاین کار می‌کند و مستقیم از صفحه‌ی اصلی باز می‌شود.',
+  'install.yourDevice': 'دستگاه شما',
+  'install.action': 'نصب',
+
   'locale.toEnglish': 'English',
   'locale.toPersian': 'فارسی',
   'locale.change': 'تغییر زبان',
@@ -224,6 +231,13 @@ const en: Record<LabelKey, string> = {
 
   'guide.open': 'How it works',
   'guide.close': 'Got it',
+
+  'install.button': 'Install app',
+  'install.guideTitle': 'Install on your device',
+  'install.guideIntro':
+    'Install this tool like an app: it works offline and opens straight from your home screen.',
+  'install.yourDevice': 'Your device',
+  'install.action': 'Install',
 
   'locale.toEnglish': 'English',
   'locale.toPersian': 'فارسی',

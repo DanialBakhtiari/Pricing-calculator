@@ -21,12 +21,15 @@ interface AppState {
   /** نرخ فعال مشترک (MAR یا نرخ بازار) که به ماژول ۲ و ۴ تزریق می‌شود. */
   activeRate: number | null;
   welcomeTourDone: boolean;
+  /** توستِ یادآوریِ نصب PWA یک‌بار نشان داده شده است. */
+  installHintSeen: boolean;
   scenarios: Scenario[];
 
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   setLocale: (locale: Locale) => void;
   toggleLocale: () => void;
+  markInstallHintSeen: () => void;
   setActiveRate: (rate: number | null) => void;
   markWelcomeTourDone: () => void;
   addScenario: (input: Omit<Scenario, 'id' | 'createdAt'>) => Scenario;
@@ -48,12 +51,14 @@ export const useAppStore = create<AppState>()(
       locale: DEFAULT_LOCALE,
       activeRate: null,
       welcomeTourDone: false,
+      installHintSeen: false,
       scenarios: [],
 
       setTheme: (theme) => set({ theme }),
       toggleTheme: () => set({ theme: get().theme === 'dark' ? 'light' : 'dark' }),
       setLocale: (locale) => set({ locale }),
       toggleLocale: () => set({ locale: get().locale === 'fa' ? 'en' : 'fa' }),
+      markInstallHintSeen: () => set({ installHintSeen: true }),
       setActiveRate: (activeRate) => set({ activeRate }),
       markWelcomeTourDone: () => set({ welcomeTourDone: true }),
 

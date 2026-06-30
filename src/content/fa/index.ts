@@ -8,6 +8,7 @@ import { labels, MODULE_TEXT, type LabelKey, type ModuleId, type ModuleText } fr
 import { guides, type GuideKey, type Guide } from './guides';
 import { tours, type TourKey, type TourStep } from './tours';
 import { WEB_TIERS, type WebTierContent } from './web';
+import { INSTALL_GUIDE, type InstallPlatform } from './install';
 
 export { tooltips, messages, labels, MODULE_TEXT };
 export { MODULES } from './labels';
@@ -18,6 +19,8 @@ export { tours };
 export type { TourKey, TourStep } from './tours';
 export { WEB_TIERS };
 export type { WebTierContentId, WebTierContent } from './web';
+export { INSTALL_GUIDE };
+export type { InstallPlatform, InstallPlatformId } from './install';
 export { BRAND } from './brand';
 export { guides };
 export type { GuideKey, Guide } from './guides';
@@ -42,3 +45,6 @@ export const tour = (key: TourKey): readonly TourStep[] => tours[getLocale()][ke
 
 /** سه سطح پیشنهادیِ ماژول وب (زبان فعال). */
 export const webTiers = (): readonly WebTierContent[] => WEB_TIERS[getLocale()];
+
+/** گام‌های نصب PWA برای هر پلتفرم (زبان فعال). */
+export const installGuide = (): readonly InstallPlatform[] => INSTALL_GUIDE[getLocale()];
