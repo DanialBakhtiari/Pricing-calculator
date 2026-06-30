@@ -141,7 +141,7 @@ export function WebPage() {
                         }
                       }}
                     >
-                      <SelectTrigger className="h-11 w-full">
+                      <SelectTrigger className="h-11 w-full" aria-label={label('web.feature')}>
                         <SelectValue placeholder={label('web.featurePlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -189,7 +189,7 @@ export function WebPage() {
                   control={control}
                   render={({ field }) => (
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="h-11 w-full">
+                      <SelectTrigger className="h-11 w-full" aria-label={label('web.rateSource')}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -289,7 +289,7 @@ export function WebPage() {
                   control={control}
                   render={({ field }) => (
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="h-11 w-full">
+                      <SelectTrigger className="h-11 w-full" aria-label={label('web.builder')}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>

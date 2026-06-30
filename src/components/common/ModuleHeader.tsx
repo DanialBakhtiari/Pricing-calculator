@@ -22,7 +22,7 @@ export function ModuleHeader({
   onDownloadImage,
 }: ModuleHeaderProps) {
   return (
-    <header className="flex flex-col gap-3 border-b pb-4 md:flex-row md:items-start md:justify-between">
+    <div className="flex flex-col gap-3 border-b pb-4 md:flex-row md:items-start md:justify-between">
       <div className="space-y-1">
         <Button asChild variant="ghost" size="sm" className="text-muted-foreground -ms-2">
           <Link to="/">
@@ -61,6 +61,6 @@ export function ModuleHeader({
           </Button>
         ) : null}
       </div>
-    </header>
+    </div>
   );
 }

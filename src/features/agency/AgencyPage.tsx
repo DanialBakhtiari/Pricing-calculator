@@ -180,6 +180,7 @@ export function AgencyPage() {
                           <Input
                             inputMode="decimal"
                             dir="ltr"
+                            aria-label={`${label('agency.roleHours')} ${i + 1}`}
                             className="h-11 text-center"
                             value={field.value == null ? '' : toPersianDigits(field.value)}
                             onChange={(e) => field.onChange(parseField(e.target.value))}
@@ -198,6 +199,7 @@ export function AgencyPage() {
                           <Input
                             inputMode="decimal"
                             dir="ltr"
+                            aria-label={`${label('agency.roleRate')} ${i + 1}`}
                             className="h-11 text-center"
                             value={field.value == null ? '' : toPersianDigits(field.value)}
                             onChange={(e) => field.onChange(parseField(e.target.value))}

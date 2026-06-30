@@ -1,6 +1,9 @@
 import '@testing-library/jest-dom/vitest';
-import { afterEach, vi } from 'vitest';
+import { afterEach, expect, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
+import * as axeMatchers from 'vitest-axe/matchers';
+
+expect.extend(axeMatchers);
 
 // jsdom has no matchMedia — provide a controllable stub (defaults to no-match).
 if (!window.matchMedia) {
