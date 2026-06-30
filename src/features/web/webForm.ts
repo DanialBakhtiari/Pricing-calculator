@@ -81,6 +81,8 @@ export interface WebResult {
   maintenance: MoneyRange | null;
   performance: MoneyRange | null;
   multilangExtraHours: number | null;
+  /** جمع کل پیشنهاد = قیمت پروژه + افزودنی‌های فعال (با toggleها تغییر می‌کند). */
+  grandTotal: MoneyRange;
   tiers: WebTier[];
 }
 
@@ -126,6 +128,11 @@ export function computeWebResult(
     const maintenance = v.addMaintenance ? maintenanceRetainer(proposal.final) : null;
     const performance = v.addCwv ? performanceBudget(proposal.final) : null;
 
+    const grandTotal: MoneyRange = {
+      min: proposal.final + (maintenance?.min ?? 0) + (performance?.min ?? 0),
+      max: proposal.final + (maintenance?.max ?? 0) + (performance?.max ?? 0),
+    };
+
     return {
       rate,
       rb,
@@ -133,6 +140,7 @@ export function computeWebResult(
       maintenance,
       performance,
       multilangExtraHours,
+      grandTotal,
       tiers: buildTiers(proposal),
     };
   } catch {

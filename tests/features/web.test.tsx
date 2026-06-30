@@ -66,6 +66,16 @@ describe('computeWebResult (§2 vector)', () => {
     expect(computeWebResult({ ...VECTOR, rateSource: 'mar', marketRate: null }, null)).toBeNull();
   });
 
+  it('grand total includes add-ons only when their toggles are on', () => {
+    const off = computeWebResult({ ...VECTOR, addMaintenance: false, addCwv: false }, null);
+    const on = computeWebResult({ ...VECTOR, addMaintenance: true, addCwv: false }, null);
+    // toggles off → grand total equals the project price (no add-ons)
+    expect(off?.grandTotal.min).toBe(337_500_000);
+    expect(off?.grandTotal.max).toBe(337_500_000);
+    // maintenance on → grand total grows by the maintenance band
+    expect(on?.grandTotal.max).toBeGreaterThan(337_500_000);
+  });
+
   it('applies the multilang surcharge to base hours and the price (§2.7)', () => {
     const r = computeWebResult({ ...VECTOR, multilangCount: 2 }, null);
     expect(r?.multilangExtraHours).toBeCloseTo(120, 5); // 300 × 0.2 × 2

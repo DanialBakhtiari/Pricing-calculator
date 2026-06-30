@@ -19,12 +19,11 @@ import {
   ModuleHeader,
   MoneyField,
   NumberField,
-  ResultCard,
   ScenarioBar,
   SliderField,
   TierCards,
 } from '@/components/common';
-import { RANGES } from '@/lib/pricing';
+import { RANGES, type MoneyRange } from '@/lib/pricing';
 import { formatPercent, formatToman, toPersianDigits } from '@/lib/format';
 import { useAppStore } from '@/lib/storage/appStore';
 import { startModuleTour } from '@/lib/onboarding/runTour';
@@ -35,6 +34,21 @@ import { WEB_DEFAULTS, computeWebResult, rbTotal, webSchema, type WebFormValues 
 const WaterfallChart = lazy(() => import('@/components/charts/WaterfallChart'));
 
 const META = MODULES.find((m) => m.id === 'web');
+
+/** بازه‌ی پولی را تک‌مقدار یا «کف – سقف» نشان می‌دهد. */
+function moneyRangeText(r: MoneyRange): string {
+  if (r.min === r.max) return formatToman(r.min);
+  return `${formatToman(r.min, { withUnit: false })} – ${formatToman(r.max)}`;
+}
+
+function SummaryRow({ label: rowLabel, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-2">
+      <span className="text-muted-foreground min-w-0 truncate">{rowLabel}</span>
+      <span className="shrink-0 text-end tabular-nums">{value}</span>
+    </div>
+  );
+}
 
 export function WebPage() {
   const activeRate = useAppStore((s) => s.activeRate);
@@ -67,9 +81,9 @@ export function WebPage() {
         onHelp={() => void startModuleTour('web')}
       />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-          {/* دامنه‌ی پروژه */}
+      <div className="grid gap-6 lg:grid-cols-5">
+        {/* ───── فرم (۳/۵) ───── */}
+        <form className="space-y-6 lg:col-span-3" onSubmit={(e) => e.preventDefault()}>
           <Card data-tour="web-feature">
             <CardHeader>
               <CardTitle>{label('web.featureGroup')}</CardTitle>
@@ -95,7 +109,7 @@ export function WebPage() {
                         }
                       }}
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="h-11 w-full">
                         <SelectValue placeholder={label('web.featurePlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -128,7 +142,6 @@ export function WebPage() {
             </CardContent>
           </Card>
 
-          {/* نرخ و ضرایب */}
           <Card data-tour="web-cm-rb">
             <CardHeader>
               <CardTitle>{label('web.rateGroup')}</CardTitle>
@@ -144,7 +157,7 @@ export function WebPage() {
                   control={control}
                   render={({ field }) => (
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="h-11 w-full">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -211,7 +224,7 @@ export function WebPage() {
                       return (
                         <label
                           key={f.id}
-                          className="flex cursor-pointer items-center gap-2 text-sm"
+                          className="flex cursor-pointer items-center gap-2 py-1 text-sm"
                         >
                           <Checkbox
                             checked={checked}
@@ -244,7 +257,7 @@ export function WebPage() {
                   control={control}
                   render={({ field }) => (
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="h-11 w-full">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -261,7 +274,6 @@ export function WebPage() {
             </CardContent>
           </Card>
 
-          {/* افزودنی‌ها */}
           <Card>
             <CardHeader>
               <CardTitle>{label('web.addonsGroup')}</CardTitle>
@@ -312,72 +324,100 @@ export function WebPage() {
           </Card>
         </form>
 
-        {/* نتایج */}
-        <div className="space-y-4">
+        {/* ───── خلاصه‌ی زنده (۲/۵) ───── */}
+        <div className="lg:col-span-2">
           {result ? (
-            <>
-              <ResultCard
-                label={label('web.finalPrice')}
-                value={formatToman(result.proposal.final)}
-                tooltip={tooltip('web.waterfall')}
-                hint={label('web.finalHint')}
-                status="healthy"
-              />
+            <Card className="lg:sticky lg:top-20">
+              <CardHeader>
+                <CardTitle className="text-base">{label('web.summaryTitle')}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-1">
+                  <div className="text-muted-foreground flex items-center gap-1.5 text-sm">
+                    <span>{label('web.finalPrice')}</span>
+                    <InfoTooltip content={tooltip('web.waterfall')} />
+                  </div>
+                  <p className="text-success text-3xl font-bold break-words tabular-nums">
+                    {formatToman(result.proposal.final)}
+                  </p>
+                  <p className="text-muted-foreground text-xs">{label('web.finalHint')}</p>
+                </div>
 
-              {(result.maintenance !== null ||
+                <div className="space-y-1 border-t pt-3 text-sm">
+                  <SummaryRow
+                    label={label('breakdown.base')}
+                    value={formatToman(result.proposal.base)}
+                  />
+                  <SummaryRow
+                    label={`+ ${label('breakdown.cm')}`}
+                    value={formatToman(result.proposal.afterCM - result.proposal.base)}
+                  />
+                  <SummaryRow
+                    label={`+ ${label('breakdown.rb')}`}
+                    value={formatToman(result.proposal.afterRB - result.proposal.afterCM)}
+                  />
+                </div>
+
+                {result.maintenance !== null ||
                 result.performance !== null ||
-                result.multilangExtraHours !== null) && (
-                <Card>
-                  <CardContent className="space-y-1 text-sm">
+                result.multilangExtraHours !== null ? (
+                  <div className="space-y-1 border-t pt-3 text-sm">
                     {result.maintenance ? (
-                      <div className="flex justify-between gap-2">
-                        <span className="text-muted-foreground min-w-0 truncate">
-                          {label('web.maintenanceLine')}
-                        </span>
-                        <span className="shrink-0 text-end tabular-nums">
-                          {formatToman(result.maintenance.min, { withUnit: false })} –{' '}
-                          {formatToman(result.maintenance.max)}
-                        </span>
-                      </div>
+                      <SummaryRow
+                        label={label('web.maintenanceLine')}
+                        value={moneyRangeText(result.maintenance)}
+                      />
                     ) : null}
                     {result.performance ? (
-                      <div className="flex justify-between gap-2">
-                        <span className="text-muted-foreground min-w-0 truncate">
-                          {label('web.performanceLine')}
-                        </span>
-                        <span className="shrink-0 text-end tabular-nums">
-                          {formatToman(result.performance.min, { withUnit: false })} –{' '}
-                          {formatToman(result.performance.max)}
-                        </span>
-                      </div>
+                      <SummaryRow
+                        label={label('web.performanceLine')}
+                        value={moneyRangeText(result.performance)}
+                      />
                     ) : null}
                     {result.multilangExtraHours ? (
-                      <div className="flex justify-between gap-2">
-                        <span className="text-muted-foreground min-w-0 truncate">
-                          {label('web.multilangExtra')}
-                        </span>
-                        <span className="shrink-0 text-end tabular-nums">
-                          +{toPersianDigits(Math.round(result.multilangExtraHours))}{' '}
-                          {label('unit.hours')}
-                        </span>
-                      </div>
+                      <SummaryRow
+                        label={label('web.multilangExtra')}
+                        value={`+${toPersianDigits(Math.round(result.multilangExtraHours))} ${label('unit.hours')}`}
+                      />
                     ) : null}
-                  </CardContent>
-                </Card>
-              )}
-            </>
+                  </div>
+                ) : null}
+
+                <div className="border-t pt-3">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="font-medium">{label('web.grandTotal')}</span>
+                    <span className="text-primary shrink-0 text-end text-xl font-bold tabular-nums">
+                      {moneyRangeText(result.grandTotal)}
+                    </span>
+                  </div>
+                  <p className="text-muted-foreground pt-1 text-xs">
+                    {label('web.grandTotalHint')}
+                  </p>
+                </div>
+
+                <div className="text-muted-foreground flex flex-wrap justify-between gap-x-4 gap-y-1 border-t pt-3 text-xs">
+                  <span>
+                    {label('web.rateUsed')}:{' '}
+                    <span className="tabular-nums">{formatToman(result.rate)}</span>
+                  </span>
+                  <span>
+                    {label('web.rbUsed')}:{' '}
+                    <span className="tabular-nums">{formatPercent(result.rb * 100)}</span>
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
           ) : (
             <Card>
-              <CardContent className="text-muted-foreground py-10 text-center">
+              <CardContent className="text-muted-foreground py-12 text-center">
                 {needsMar ? label('web.noMar') : label('state.invalid')}
               </CardContent>
             </Card>
           )}
-
-          <ScenarioBar module="web" inputs={values} onRestore={(inputs) => reset(inputs)} />
         </div>
       </div>
 
+      {/* ───── تمام‌عرض: نمودار آبشاری + سه سطح ───── */}
       {result ? (
         <>
           <Card data-tour="web-waterfall">
@@ -425,6 +465,8 @@ export function WebPage() {
           </div>
         </>
       ) : null}
+
+      <ScenarioBar module="web" inputs={values} onRestore={(inputs) => reset(inputs)} />
     </div>
   );
 }
