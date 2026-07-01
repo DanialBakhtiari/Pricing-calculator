@@ -8,7 +8,7 @@
   "homepage": "https://danialbakhtiari.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/danialbakhtiari"
+    "url": "https://github.com/DanialBakhtiari/Pricing-calculator.git"
   },
   "scripts": {
     "dev": "vite",
@@ -22,7 +22,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "deploy": "node scripts/publish-deploy.mjs"
   },
   "engines": {
     "node": ">=22",

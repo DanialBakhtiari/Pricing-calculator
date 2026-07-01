@@ -77,6 +77,16 @@ pnpm e2e            # Playwright e2e روی بیلد preview
 
 > **میزبانی زیرِ زیرمسیر (subpath):** اگر اپ زیر یک زیرمسیر سرو می‌شود (مثلاً `example.com/pricing/`)، باید `base` در `vite.config.ts` با همان مسیر یکی باشد (`base: '/pricing/'`) وگرنه assetها از root درخواست و ۴۰۴ می‌شوند. برای میزبانی در ریشه، `base: '/'` بگذارید.
 
+### میزبانی با `git clone` (cPanel)
+
+شاخه‌ی `deploy` نسخه‌ی **از پیش‌ساخته‌شده** (خروجی `dist/`) را در ریشه‌اش نگه می‌دارد؛ روی هاست مستقیم کلون و سرو می‌شود (زیرِ `/pricing/`). روی هاست:
+
+```bash
+git clone -b deploy --single-branch https://github.com/DanialBakhtiari/Pricing-calculator.git pricing
+```
+
+انتشار نسخه‌ی جدید (از دستگاه توسعه): `pnpm deploy` — build می‌کند و شاخه‌ی `deploy` را به‌روزرسانی و push می‌کند. سپس روی هاست، داخل پوشه‌ی `pricing/`: `git pull`. (یک `.htaccess` هم در شاخه هست که دسترسی به `.git` را می‌بندد.)
+
 ---
 
 ## 🧱 استک
