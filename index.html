@@ -20,7 +20,8 @@
           var raw = localStorage.getItem('pricing:app:v1');
           var state = raw ? JSON.parse(raw).state : null;
           var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var dark = state && state.theme ? state.theme === 'dark' : prefersDark;
+          var theme = state && state.theme ? state.theme : 'system';
+          var dark = theme === 'dark' || (theme === 'system' && prefersDark);
           document.documentElement.classList.toggle('dark', dark);
           var locale = state && state.locale ? state.locale : 'fa';
           document.documentElement.lang = locale;

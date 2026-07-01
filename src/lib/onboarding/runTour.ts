@@ -12,7 +12,7 @@ export async function startModuleTour(key: TourKey): Promise<void> {
 
   const isRtl = getLocale() === 'fa';
   const sep = isRtl ? 'از' : 'of';
-  const popClass = isRtl ? 'driverjs-rtl' : 'driverjs-ltr';
+  const popClass = `driver-brand ${isRtl ? 'driverjs-rtl' : 'driverjs-ltr'}`;
 
   const steps = tour(key).map((step) => ({
     element: step.target,

@@ -27,7 +27,8 @@ describe('App shell (dashboard + theme)', () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const toggle = await screen.findByRole('button', { name: 'تیره کردن تم' });
+    // چرخه از «روشن» → «تیره»
+    const toggle = await screen.findByRole('button', { name: /تغییر تم/ });
     await user.click(toggle);
 
     expect(useAppStore.getState().theme).toBe('dark');

@@ -12,11 +12,14 @@ describe('appStore', () => {
     });
   });
 
-  it('toggles and sets the theme', () => {
+  it('cycles theme system → light → dark, and setTheme sets directly', () => {
+    useAppStore.setState({ theme: 'system' });
+    useAppStore.getState().toggleTheme();
+    expect(useAppStore.getState().theme).toBe('light');
     useAppStore.getState().toggleTheme();
     expect(useAppStore.getState().theme).toBe('dark');
     useAppStore.getState().toggleTheme();
-    expect(useAppStore.getState().theme).toBe('light');
+    expect(useAppStore.getState().theme).toBe('system');
     useAppStore.getState().setTheme('dark');
     expect(useAppStore.getState().theme).toBe('dark');
   });

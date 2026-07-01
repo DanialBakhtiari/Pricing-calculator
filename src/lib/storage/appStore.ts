@@ -3,7 +3,12 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import type { ModuleId } from '@/content/fa';
 import { DEFAULT_LOCALE, type Locale } from '@/lib/i18n/locale';
 
-export type Theme = 'light' | 'dark';
+/** تنظیمِ تم: «system» از تنظیماتِ دستگاه پیروی می‌کند؛ «light»/«dark» صریح‌اند. */
+export type Theme = 'system' | 'light' | 'dark';
+
+const THEME_CYCLE: readonly Theme[] = ['system', 'light', 'dark'];
+const nextTheme = (t: Theme): Theme =>
+  THEME_CYCLE[(THEME_CYCLE.indexOf(t) + 1) % THEME_CYCLE.length] ?? 'system';
 
 /** سناریوی ذخیره‌شده — architecture §2. */
 export interface Scenario {
@@ -47,7 +52,7 @@ export const PERSIST_KEY = 'pricing:app:v1';
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
-      theme: 'light',
+      theme: 'system',
       locale: DEFAULT_LOCALE,
       activeRate: null,
       welcomeTourDone: false,
@@ -55,7 +60,8 @@ export const useAppStore = create<AppState>()(
       scenarios: [],
 
       setTheme: (theme) => set({ theme }),
-      toggleTheme: () => set({ theme: get().theme === 'dark' ? 'light' : 'dark' }),
+      // چرخه: پیرو دستگاه → روشن → تیره → …
+      toggleTheme: () => set({ theme: nextTheme(get().theme) }),
       setLocale: (locale) => set({ locale }),
       toggleLocale: () => set({ locale: get().locale === 'fa' ? 'en' : 'fa' }),
       markInstallHintSeen: () => set({ installHintSeen: true }),

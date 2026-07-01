@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { Direction } from 'radix-ui';
-import { Globe, Moon, Sun } from 'lucide-react';
+import { Globe, Monitor, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toaster } from '@/components/ui/sonner';
@@ -14,19 +14,20 @@ import { useApplyLocale } from './use-apply-locale';
 import { PwaInstall } from './PwaInstall';
 import { isEmbed, usePostHeight } from './embed';
 
-/** تاگل تم روشن/تیره. */
+/** تاگل تم: چرخه‌ی پیرو دستگاه → روشن → تیره. آیکن، حالتِ فعلی را نشان می‌دهد. */
 function ThemeToggle() {
   const theme = useAppStore((s) => s.theme);
   const toggleTheme = useAppStore((s) => s.toggleTheme);
+  const Icon = theme === 'system' ? Monitor : theme === 'light' ? Sun : Moon;
   return (
     <Button
       variant="outline"
       size="icon"
       className="size-11"
       onClick={toggleTheme}
-      aria-label={theme === 'dark' ? label('theme.toLight') : label('theme.toDark')}
+      aria-label={`${label('theme.aria')} — ${label(`theme.${theme}`)}`}
     >
-      {theme === 'dark' ? <Sun aria-hidden /> : <Moon aria-hidden />}
+      <Icon aria-hidden />
     </Button>
   );
 }

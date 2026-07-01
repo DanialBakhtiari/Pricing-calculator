@@ -55,8 +55,10 @@ const fa = {
   'benchmark.warning': 'احتیاط',
   'benchmark.danger': 'خطر',
 
-  'theme.toLight': 'روشن کردن تم',
-  'theme.toDark': 'تیره کردن تم',
+  'theme.aria': 'تغییر تم',
+  'theme.system': 'پیرو دستگاه',
+  'theme.light': 'روشن',
+  'theme.dark': 'تیره',
 
   'tour.next': 'بعدی',
   'tour.prev': 'قبلی',
@@ -261,8 +263,10 @@ const en: Record<LabelKey, string> = {
   'benchmark.warning': 'Caution',
   'benchmark.danger': 'Danger',
 
-  'theme.toLight': 'Switch to light theme',
-  'theme.toDark': 'Switch to dark theme',
+  'theme.aria': 'Toggle theme',
+  'theme.system': 'System',
+  'theme.light': 'Light',
+  'theme.dark': 'Dark',
 
   'tour.next': 'Next',
   'tour.prev': 'Back',

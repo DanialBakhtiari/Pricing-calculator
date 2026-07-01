@@ -9,7 +9,7 @@ import path from 'node:path';
 export default defineConfig({
   // میزبانی زیرِ زیرمسیر (مثلاً /pricing/). CI مقدار را با VITE_BASE ست می‌کند؛
   // پیش‌فرضِ محلی '/pricing/'. اگر زیرمسیر عوض شد، workflow و همین‌جا را به‌روزرسانی کن.
-  base: process.env.VITE_BASE || '/pricing/',
+  base: process.env.VITE_BASE ?? '/pricing/',
   plugins: [
     react(),
     tailwindcss(),
