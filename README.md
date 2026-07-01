@@ -41,7 +41,7 @@ pnpm test:cov       # پوشش (موتور قیمت‌گذاری ۱۰۰٪)
 pnpm e2e            # Playwright e2e روی بیلد preview
 ```
 
-> آیکن‌های PWA با `node scripts/gen-icons.mjs` ساخته می‌شوند (بدون وابستگی بومی).
+> آیکن‌های PWA و فاوآیکن با `node scripts/gen-icons.mjs` از روی لوگوی برند (`public/brand/icon-chart*.svg`) با Chromium رندر می‌شوند.
 
 ---
 
