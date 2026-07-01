@@ -7,6 +7,9 @@ import path from 'node:path';
 
 // https://vite.dev/config/
 export default defineConfig({
+  // میزبانی زیرِ زیرمسیر: tools.danialbakhtiari.com/pricing/ .
+  // اگر مسیر عوض شد این را تغییر بده (یا './' برای هر زیرمسیرِ نامعلوم — با احتیاطِ PWA).
+  base: '/pricing/',
   plugins: [
     react(),
     tailwindcss(),

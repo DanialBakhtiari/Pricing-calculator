@@ -75,6 +75,8 @@ pnpm e2e            # Playwright e2e روی بیلد preview
 
 خروجی `pnpm build` یک سایت **استاتیک** در `dist/` است؛ روی هر CDN/هاست استاتیک (Netlify, Vercel, GitHub Pages, Cloudflare Pages, یا یک پوشه‌ی ساده) قابل میزبانی است. چون مسیریابی hash است، نیازی به rewrite سمت سرور نیست. Service worker با `registerType: autoUpdate` نسخه‌ی جدید را خودکار به‌روزرسانی می‌کند.
 
+> **میزبانی زیرِ زیرمسیر (subpath):** اگر اپ زیر یک زیرمسیر سرو می‌شود (مثلاً `example.com/pricing/`)، باید `base` در `vite.config.ts` با همان مسیر یکی باشد (`base: '/pricing/'`) وگرنه assetها از root درخواست و ۴۰۴ می‌شوند. برای میزبانی در ریشه، `base: '/'` بگذارید.
+
 ---
 
 ## 🧱 استک
