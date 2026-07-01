@@ -8,9 +8,8 @@ pnpm-debug.log*
 node_modules
 .pnpm-store
 
-# Build output
-# dist/ is intentionally committed for cPanel git-clone hosting (served via
-# .htaccess under /pricing/). See README → Deploy. Do not re-ignore it.
+# Build output (built in CI and published to the `deploy` branch — never on main)
+dist
 dist-ssr
 dev-dist
 coverage

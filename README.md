@@ -77,17 +77,17 @@ pnpm e2e            # Playwright e2e روی بیلد preview
 
 > **میزبانی زیرِ زیرمسیر (subpath):** اگر اپ زیر یک زیرمسیر سرو می‌شود (مثلاً `example.com/pricing/`)، باید `base` در `vite.config.ts` با همان مسیر یکی باشد (`base: '/pricing/'`) وگرنه assetها از root درخواست و ۴۰۴ می‌شوند. برای میزبانی در ریشه، `base: '/'` بگذارید.
 
-### میزبانی با `git clone` (cPanel)
+### میزبانی با `git clone` (cPanel) + انتشار خودکار (CI)
 
-خروجی build (`dist/`) روی همین شاخه‌ی `main` کامیت می‌شود و یک `.htaccess` در ریشه، سایت را از پوشه‌ی `dist/` زیرِ `/pricing/` سرو می‌کند و دسترسی به `.git` و فایل‌های سورس را می‌بندد (نیازمند `mod_rewrite` و `AllowOverride on`). روی هاست:
+`main` فقط **سورس** است. با هر push به `main`، گیت‌هاب‌اکشنز (`.github/workflows/deploy.yml`) پروژه را **تست و build** می‌کند و فقط خروجیِ `dist/` را روی برنچ `deploy` می‌گذارد (append، بدون force). روی هاست، **برنچ `deploy`** را کلون کن (فقط فایل‌های آماده، بدون سورس):
 
 ```bash
-git clone https://github.com/DanialBakhtiari/Pricing-calculator.git pricing
+git clone -b deploy --single-branch https://github.com/DanialBakhtiari/Pricing-calculator.git pricing
 ```
 
-انتشار نسخه‌ی جدید (از دستگاه توسعه): `pnpm deploy` — build می‌کند، خروجیِ `dist/` را روی `main` کامیت و push می‌کند. سپس روی هاست، داخل پوشه‌ی `pricing/`: `git pull`.
+**آپدیت:** چون CI با هر push برنچ `deploy` را جلو می‌برد، روی هاست فقط `git pull` (یا در cPanel: «Update from Remote»). یک `.htaccess` هم داخل برنچ هست که دسترسی به `.git` را می‌بندد.
 
-> **توجه:** چون خروجیِ ساخت روی `main` کامیت می‌شود، پس از هر `pnpm build`، پوشه‌ی `dist/` در `git status` تغییر‌یافته نشان داده می‌شود؛ این عمدی است (هاست build نمی‌کند و به فایل‌های آماده نیاز دارد).
+> زیرمسیر با `VITE_BASE` در workflow کنترل می‌شود (پیش‌فرض `/pricing/`) و باید با `base` در `vite.config.ts` یکی باشد. برای زیرمسیر دیگر، هر دو را به‌روزرسانی کن.
 
 ---
 

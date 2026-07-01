@@ -1,0 +1,4 @@
+# The deploy branch is served as a live git clone — block access to git metadata.
+# (Copied into dist/ at build time, so it lands at the served root.)
+RewriteEngine On
+RewriteRule (^|/)\.git - [F,L]

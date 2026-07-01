@@ -7,9 +7,9 @@ import path from 'node:path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  // میزبانی زیرِ زیرمسیر: tools.danialbakhtiari.com/pricing/ .
-  // اگر مسیر عوض شد این را تغییر بده (یا './' برای هر زیرمسیرِ نامعلوم — با احتیاطِ PWA).
-  base: '/pricing/',
+  // میزبانی زیرِ زیرمسیر (مثلاً /pricing/). CI مقدار را با VITE_BASE ست می‌کند؛
+  // پیش‌فرضِ محلی '/pricing/'. اگر زیرمسیر عوض شد، workflow و همین‌جا را به‌روزرسانی کن.
+  base: process.env.VITE_BASE || '/pricing/',
   plugins: [
     react(),
     tailwindcss(),
