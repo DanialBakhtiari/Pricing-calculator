@@ -1,55 +1,34 @@
-// انتشار خروجی build به شاخه‌ی `deploy` برای میزبانی از راهِ git-clone در cPanel
-// (زیرِ زیرمسیر /pricing/؛ base در vite.config.ts باید با همان مسیر یکی باشد).
+// انتشار نسخه‌ی جدیدِ سایت روی همین شاخه‌ی main برای میزبانی از راهِ git-clone در
+// cPanel (زیرِ /pricing/؛ base در vite.config.ts باید با همان مسیر یکی باشد).
 //
 // اجرا:  pnpm deploy
-// نتیجه: build تازه → شاخه‌ی deploy (فایل‌های استاتیک در ریشه) → push -f به origin.
-// روی هاست فقط کافی است در پوشه‌ی کلون‌شده `git pull` بزنی.
+// نتیجه: build تازه → کامیتِ خروجیِ dist (+ .htaccess) روی main → push.
+// روی هاست، داخل پوشه‌ی کلون‌شده فقط: git pull
 
 import { execSync } from 'node:child_process';
-import { mkdtempSync, readdirSync, cpSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 
-const BRANCH = 'deploy';
 const run = (cmd, opts = {}) => execSync(cmd, { stdio: 'inherit', ...opts });
-const quiet = (cmd, opts = {}) => {
-  try {
-    execSync(cmd, { stdio: 'ignore', ...opts });
-  } catch {
-    /* بی‌اهمیت (مثلاً حذفِ چیزی که وجود ندارد) */
-  }
-};
 
 // build تازه (خطا ⇒ توقف).
 run('pnpm build');
 
-const wt = mkdtempSync(join(tmpdir(), 'deploy-wt-'));
+// فقط خروجیِ ساخت را stage کن (dist در gitignore نیست؛ -f صرفاً محکم‌کاری است).
+run('git add -f dist .htaccess');
+
+// اگر build نسبت به کامیت قبلی تغییری نداشت، کامیتِ خالی نساز.
+let changed = true;
 try {
-  quiet(`git worktree remove --force "${wt}"`);
-  quiet(`git branch -D ${BRANCH}`);
-  run(`git worktree add -f --detach "${wt}"`);
-
-  // شاخه‌ی orphan تمیز؛ همه‌ی فایل‌های ردیابی‌شده را پاک کن.
-  run(`git checkout --orphan ${BRANCH}`, { cwd: wt });
-  quiet('git rm -rf .', { cwd: wt });
-
-  // خروجی build را در ریشه‌ی شاخه بریز.
-  for (const entry of readdirSync('dist')) {
-    cpSync(join('dist', entry), join(wt, entry), { recursive: true });
-  }
-
-  // این پوشه به‌صورت کلونِ زنده سرو می‌شود؛ دسترسی به .git را ببند.
-  writeFileSync(
-    join(wt, '.htaccess'),
-    '# served git clone — hide VCS internals\nRedirectMatch 404 /\\.git(/|$)\n',
-  );
-
-  run('git add -A -f', { cwd: wt });
-  run('git commit -q -m "deploy: prebuilt static site (Vite base /pricing/)"', { cwd: wt });
-  run(`git push -f -u origin ${BRANCH}`, { cwd: wt });
-} finally {
-  quiet(`git worktree remove --force "${wt}"`);
-  quiet(`git branch -D ${BRANCH}`);
+  execSync('git diff --cached --quiet');
+  changed = false;
+} catch {
+  changed = true;
 }
 
-console.log('\n✓ deploy branch published. On the host, inside the clone: git pull');
+if (!changed) {
+  console.log('\n• build خروجیِ تازه‌ای نداشت؛ کامیتی ساخته نشد.');
+} else {
+  run('git commit -m "chore: rebuild static site for /pricing/"');
+}
+
+run('git push origin HEAD');
+console.log('\n✓ منتشر شد روی main. روی هاست، داخل پوشه‌ی کلون: git pull');

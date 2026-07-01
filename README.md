@@ -79,13 +79,15 @@ pnpm e2e            # Playwright e2e روی بیلد preview
 
 ### میزبانی با `git clone` (cPanel)
 
-شاخه‌ی `deploy` نسخه‌ی **از پیش‌ساخته‌شده** (خروجی `dist/`) را در ریشه‌اش نگه می‌دارد؛ روی هاست مستقیم کلون و سرو می‌شود (زیرِ `/pricing/`). روی هاست:
+خروجی build (`dist/`) روی همین شاخه‌ی `main` کامیت می‌شود و یک `.htaccess` در ریشه، سایت را از پوشه‌ی `dist/` زیرِ `/pricing/` سرو می‌کند و دسترسی به `.git` و فایل‌های سورس را می‌بندد (نیازمند `mod_rewrite` و `AllowOverride on`). روی هاست:
 
 ```bash
-git clone -b deploy --single-branch https://github.com/DanialBakhtiari/Pricing-calculator.git pricing
+git clone https://github.com/DanialBakhtiari/Pricing-calculator.git pricing
 ```
 
-انتشار نسخه‌ی جدید (از دستگاه توسعه): `pnpm deploy` — build می‌کند و شاخه‌ی `deploy` را به‌روزرسانی و push می‌کند. سپس روی هاست، داخل پوشه‌ی `pricing/`: `git pull`. (یک `.htaccess` هم در شاخه هست که دسترسی به `.git` را می‌بندد.)
+انتشار نسخه‌ی جدید (از دستگاه توسعه): `pnpm deploy` — build می‌کند، خروجیِ `dist/` را روی `main` کامیت و push می‌کند. سپس روی هاست، داخل پوشه‌ی `pricing/`: `git pull`.
+
+> **توجه:** چون خروجیِ ساخت روی `main` کامیت می‌شود، پس از هر `pnpm build`، پوشه‌ی `dist/` در `git status` تغییر‌یافته نشان داده می‌شود؛ این عمدی است (هاست build نمی‌کند و به فایل‌های آماده نیاز دارد).
 
 ---
 

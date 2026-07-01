@@ -9,7 +9,8 @@ node_modules
 .pnpm-store
 
 # Build output
-dist
+# dist/ is intentionally committed for cPanel git-clone hosting (served via
+# .htaccess under /pricing/). See README → Deploy. Do not re-ignore it.
 dist-ssr
 dev-dist
 coverage
